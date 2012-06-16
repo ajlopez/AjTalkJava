@@ -21,7 +21,7 @@ public class ExecutionBlock {
 			switch (this.block.bytecodes[ip]) {
 			case Bytecodes.RETURN:
 				return stack[position-1];
-			case Bytecodes.GETARG:
+			case Bytecodes.GETARGUMENT:
 				ip++;
 				stack[position++] = arguments[this.block.bytecodes[ip]];
 				break;

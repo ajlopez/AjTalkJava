@@ -21,9 +21,18 @@ public class ExecutionBlock {
 			switch (this.block.bytecodes[ip]) {
 			case Bytecodes.RETURN:
 				return stack[position-1];
-			case Bytecodes.LOADARG:
+			case Bytecodes.GETARG:
 				ip++;
 				stack[position++] = arguments[this.block.bytecodes[ip]];
+				break;
+			case Bytecodes.GETLOCAL:
+				ip++;
+				stack[position++] = this.locals[this.block.bytecodes[ip]];
+				break;
+			case Bytecodes.SETLOCAL:
+				ip++;
+				this.locals[this.block.bytecodes[ip]] = stack[--position];
+				break;
 			}
 			
 			ip++;

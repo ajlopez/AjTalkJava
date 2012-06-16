@@ -167,4 +167,70 @@ public class LexerTests {
 		
 		assertNull(lexer.nextToken());
 	}
+
+	@Test
+	public void simpleBinSelector() throws IOException, LexerException {
+		Lexer lexer = new Lexer("+");
+		Token token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.BINSELECTOR, token.getType());
+		assertEquals("+", token.getValue());
+		
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
+	public void twoCharBinSelector() throws IOException, LexerException {
+		Lexer lexer = new Lexer("++");
+		Token token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.BINSELECTOR, token.getType());
+		assertEquals("++", token.getValue());
+		
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
+	public void twoBinSelectors() throws IOException, LexerException {
+		Lexer lexer = new Lexer("+ -");
+		Token token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.BINSELECTOR, token.getType());
+		assertEquals("+", token.getValue());
+
+		token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.BINSELECTOR, token.getType());
+		assertEquals("-", token.getValue());
+		
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
+	public void integersWithBinSelectors() throws IOException, LexerException {
+		Lexer lexer = new Lexer("1+2");
+		Token token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.INTEGER, token.getType());
+		assertEquals("1", token.getValue());
+
+		token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.BINSELECTOR, token.getType());
+		assertEquals("+", token.getValue());
+
+		token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.INTEGER, token.getType());
+		assertEquals("2", token.getValue());
+		
+		assertNull(lexer.nextToken());
+	}
 }

@@ -37,6 +37,9 @@ public class Lexer {
 		if (separators.indexOf(ch)>=0)
 			return new Token(String.valueOf(ch), TokenType.SEPARATOR);
 		
+		if (!Character.isLetterOrDigit(ch))
+			return nextBinSelector(ch);
+		
 		StringBuilder builder = new StringBuilder();
 		builder.append(ch);
 		
@@ -69,6 +72,29 @@ public class Lexer {
 		this.pushChar(ich);
 		
 		return new Token(builder.toString(), TokenType.INTEGER);		
+	}
+	
+	private Token nextBinSelector(char ch) throws IOException {
+		StringBuilder builder = new StringBuilder();
+		builder.append(ch);
+		
+		int ich = this.reader.read();
+		
+		while (ich != -1) {
+			ch = (char)ich;
+			if (Character.isSpaceChar(ch) || Character.isISOControl(ch))
+				break;
+			if (Character.isLetterOrDigit(ch))
+				break;
+			if (separators.indexOf(ch)>=0)
+				break;
+			builder.append(ch);
+			ich = this.reader.read();
+		}
+		
+		this.pushChar(ich);
+		
+		return new Token(builder.toString(), TokenType.BINSELECTOR);		
 	}
 	
 	private Token nextString() throws IOException, LexerException {

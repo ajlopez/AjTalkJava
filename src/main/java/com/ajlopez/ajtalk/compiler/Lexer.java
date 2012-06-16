@@ -34,6 +34,6 @@ public class Lexer {
 			ich = this.reader.read();
 		}
 		
-		return new Token(builder.toString(), TokenType.NAME);
+		return new Token(builder.toString(), TokenType.ID);
 	}
 }

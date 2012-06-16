@@ -33,6 +33,14 @@ public class ExecutionBlock {
 				ip++;
 				this.locals[this.block.bytecodes[ip]] = stack[--position];
 				break;
+			case Bytecodes.GETVARIABLE:
+				ip++;
+				stack[position++] = ((IObject)self).getVariable(this.block.bytecodes[ip]);
+				break;
+			case Bytecodes.SETVARIABLE:
+				ip++;
+				((IObject)self).setVariable(this.block.bytecodes[ip], stack[--position]);
+				break;
 			case Bytecodes.ADD:
 				Object op2 = stack[--position];
 				Object op1 = stack[--position];

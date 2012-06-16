@@ -44,4 +44,16 @@ public class ExecutionBlockTests {
 		assertEquals(10, object.getVariable(0));
 		assertNull(object.getVariable(1));
 	}
+
+	@Test
+	public void executeSetVariables() {
+		BaseClass behavior = new BaseClass(null, new String[] { "x", "y"} );
+		BaseObject object = new BaseObject(behavior);
+		
+		byte[] bytecodes = new byte[] { Bytecodes.GETARGUMENT, 0, Bytecodes.SETVARIABLE, 0, Bytecodes.GETARGUMENT, 1, Bytecodes.SETVARIABLE, 1 };
+		Method method = new Method(1, 1, bytecodes );
+		assertEquals(object, method.execute(object, new Object[] { 10, 20 }));
+		assertEquals(10, object.getVariable(0));
+		assertEquals(20, object.getVariable(1));
+	}
 }

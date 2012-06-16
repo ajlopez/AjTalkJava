@@ -9,19 +9,19 @@ import org.junit.Test;
 public class LexerTests {
 
 	@Test
-	public void nullTokenWhenEmptyString() throws IOException {
+	public void nullTokenWhenEmptyString() throws IOException, LexerException {
 		Lexer lexer = new Lexer("");
 		assertNull(lexer.nextToken());
 	}
 
 	@Test
-	public void nullTokenWhenBlanckString() throws IOException {
+	public void nullTokenWhenBlanckString() throws IOException, LexerException {
 		Lexer lexer = new Lexer("   ");
 		assertNull(lexer.nextToken());
 	}
 
 	@Test
-	public void simpleId() throws IOException {
+	public void simpleId() throws IOException, LexerException {
 		Lexer lexer = new Lexer("foo");
 		Token token = lexer.nextToken();
 		assertNotNull(token);
@@ -31,7 +31,7 @@ public class LexerTests {
 	}
 
 	@Test
-	public void simpleIdWithSpaces() throws IOException {
+	public void simpleIdWithSpaces() throws IOException, LexerException {
 		Lexer lexer = new Lexer("  foo  ");
 		Token token = lexer.nextToken();
 		assertNotNull(token);
@@ -41,12 +41,28 @@ public class LexerTests {
 	}
 
 	@Test
-	public void simpleInteger() throws IOException {
+	public void simpleInteger() throws IOException, LexerException {
 		Lexer lexer = new Lexer("123");
 		Token token = lexer.nextToken();
 		assertNotNull(token);
 		assertEquals(TokenType.INTEGER, token.getType());
 		assertEquals("123", token.getValue());
 		assertNull(lexer.nextToken());
+	}
+
+	@Test
+	public void simpleString() throws IOException, LexerException {
+		Lexer lexer = new Lexer("'bar'");
+		Token token = lexer.nextToken();
+		assertNotNull(token);
+		assertEquals(TokenType.STRING, token.getType());
+		assertEquals("bar", token.getValue());
+		assertNull(lexer.nextToken());
+	}
+
+	@Test(expected=LexerException.class)
+	public void simpleUnclosedString() throws IOException, LexerException {
+		Lexer lexer = new Lexer("'bar");
+		lexer.nextToken();
 	}
 }

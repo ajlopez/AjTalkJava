@@ -5,6 +5,7 @@ import java.io.Reader;
 import java.io.StringReader;
 
 public class Lexer {
+	private static final char StringDelimeter = '\''; 
 	private Reader reader;
 	
 	public Lexer(String text) {
@@ -15,7 +16,7 @@ public class Lexer {
 		this.reader = reader;
 	}
 	
-	public Token nextToken() throws IOException {
+	public Token nextToken() throws IOException, LexerException {
 		int ich = this.reader.read();
 		
 		while (ich != -1 && (Character.isSpaceChar((char) ich) || Character.isISOControl((char) ich)))
@@ -27,7 +28,10 @@ public class Lexer {
 		char ch = (char) ich;
 		
 		if (Character.isDigit(ch))
-			return nextInteger(ch);
+			return this.nextInteger(ch);
+		
+		if (ch == StringDelimeter)
+			return this.nextString();
 		
 		StringBuilder builder = new StringBuilder();
 		builder.append(ch);
@@ -54,5 +58,21 @@ public class Lexer {
 		}
 		
 		return new Token(builder.toString(), TokenType.INTEGER);		
+	}
+	
+	private Token nextString() throws IOException, LexerException {
+		StringBuilder builder = new StringBuilder();
+		
+		int ich = this.reader.read();
+		
+		while (ich != -1 && (char)ich != StringDelimeter) {
+			builder.append((char)ich);
+			ich = this.reader.read();
+		}
+		
+		if (ich == -1)
+			throw new LexerException("Unclosed string");
+		
+		return new Token(builder.toString(), TokenType.STRING);		
 	}
 }

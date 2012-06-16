@@ -110,5 +110,31 @@ public class LexerTests {
 		assertNotNull(token);
 		assertEquals(TokenType.SEPARATOR, token.getType());
 		assertEquals("}", token.getValue());
+		
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
+	public void separatorsAndId() throws IOException, LexerException {
+		Lexer lexer = new Lexer("(foo)");
+		Token token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.SEPARATOR, token.getType());
+		assertEquals("(", token.getValue());
+
+		token = lexer.nextToken();		
+
+		assertNotNull(token);
+		assertEquals(TokenType.ID, token.getType());
+		assertEquals("foo", token.getValue());
+
+		token = lexer.nextToken();		
+
+		assertNotNull(token);
+		assertEquals(TokenType.SEPARATOR, token.getType());
+		assertEquals(")", token.getValue());
+		
+		assertNull(lexer.nextToken());
 	}
 }

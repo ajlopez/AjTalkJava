@@ -9,6 +9,7 @@ public class Lexer {
 	private static final char CommentDelimeter = '"';
 	private static final String separators = "().{}";
 	private Reader reader;
+	private int nextich = -1;
 	
 	public Lexer(String text) {
 		this(new StringReader(text));
@@ -45,6 +46,8 @@ public class Lexer {
 			ich = this.reader.read();
 		}
 		
+		this.pushChar(ich);
+		
 		return new Token(builder.toString(), TokenType.ID);
 	}
 	
@@ -58,6 +61,8 @@ public class Lexer {
 			builder.append((char)ich);
 			ich = this.reader.read();
 		}
+		
+		this.pushChar(ich);
 		
 		return new Token(builder.toString(), TokenType.INTEGER);		
 	}
@@ -81,7 +86,14 @@ public class Lexer {
 	private int nextCharToProcess() throws IOException, LexerException {
 		int ich;
 		
-		for (ich = this.reader.read(); ich != -1; ich = this.reader.read()) {
+		if (nextich >= 0) {
+			ich = nextich;
+			nextich = -1;
+		}
+		else
+			ich = this.reader.read();		
+		
+		for (; ich != -1; ich = this.reader.read()) {
 			char ch = (char)ich;
 			
 			if (Character.isSpaceChar(ch) || Character.isISOControl(ch))
@@ -101,4 +113,7 @@ public class Lexer {
 		return ich;
 	}
 	
+	private void pushChar(int ich) {		
+		nextich = ich;
+	}
 }

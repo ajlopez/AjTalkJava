@@ -17,6 +17,9 @@ public class BaseClassTests {
 	public void createClassWithInstanceVariables() {
 		BaseClass klass = new BaseClass(null, new String[] { "x", "y" });
 		assertEquals(2, klass.getObjectSize());
+		assertEquals(-1, klass.getVariableOffset("z"));
+		assertEquals(0, klass.getVariableOffset("x"));
+		assertEquals(1, klass.getVariableOffset("y"));
 	}
 
 	@Test
@@ -24,6 +27,9 @@ public class BaseClassTests {
 		BaseClass superklass = new BaseClass(null, new String[] { "x", "y" });
 		BaseClass klass = new BaseClass(superklass, new String[] { "z" });
 		assertEquals(3, klass.getObjectSize());
+		assertEquals(0, klass.getVariableOffset("x"));
+		assertEquals(1, klass.getVariableOffset("y"));
+		assertEquals(2, klass.getVariableOffset("z"));
 	}
 
 	@Test

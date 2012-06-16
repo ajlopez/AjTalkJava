@@ -39,12 +39,14 @@ public class BaseClass extends BaseObject implements IClass {
 
 	@Override
 	public int getVariableOffset(String name) {
-		if (this.instanceVariableNames == null)
-			return -1;
+		int baseoffset = this.getBaseVariableOffset(name);
+		
+		if (baseoffset >= 0 || this.instanceVariableNames == null)
+			return baseoffset;
 		
 		for (int k = 0; k < this.instanceVariableNames.length; k++)
 			if (this.instanceVariableNames[k] == name)
-				return k;
+				return k + this.getBaseObjectSize();
 		
 		return -1;
 	}
@@ -53,5 +55,11 @@ public class BaseClass extends BaseObject implements IClass {
 		IBehavior behavior = this.getBehavior();
 		
 		return (behavior instanceof IClass ? ((IClass)behavior).getObjectSize() : 0);
+	}
+	
+	private int getBaseVariableOffset(String name) {
+		IBehavior behavior = this.getBehavior();
+		
+		return (behavior instanceof IClass ? ((IClass)behavior).getVariableOffset(name) : -1);
 	}
 }

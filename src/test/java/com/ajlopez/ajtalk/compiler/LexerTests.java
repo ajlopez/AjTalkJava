@@ -65,4 +65,38 @@ public class LexerTests {
 		Lexer lexer = new Lexer("'bar");
 		lexer.nextToken();
 	}
+
+	@Test
+	public void separators() throws IOException, LexerException {
+		Lexer lexer = new Lexer("().{}");
+		Token token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.SEPARATOR, token.getType());
+		assertEquals("(", token.getValue());
+
+		token = lexer.nextToken();		
+
+		assertNotNull(token);
+		assertEquals(TokenType.SEPARATOR, token.getType());
+		assertEquals(")", token.getValue());
+		
+		token = lexer.nextToken();		
+
+		assertNotNull(token);
+		assertEquals(TokenType.SEPARATOR, token.getType());
+		assertEquals(".", token.getValue());
+		
+		token = lexer.nextToken();		
+
+		assertNotNull(token);
+		assertEquals(TokenType.SEPARATOR, token.getType());
+		assertEquals("{", token.getValue());
+		
+		token = lexer.nextToken();		
+
+		assertNotNull(token);
+		assertEquals(TokenType.SEPARATOR, token.getType());
+		assertEquals("}", token.getValue());
+	}
 }

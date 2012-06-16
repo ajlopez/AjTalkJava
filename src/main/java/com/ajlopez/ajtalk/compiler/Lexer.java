@@ -5,7 +5,8 @@ import java.io.Reader;
 import java.io.StringReader;
 
 public class Lexer {
-	private static final char StringDelimeter = '\''; 
+	private static final char StringDelimeter = '\'';
+	private static final String separators = "().{}";
 	private Reader reader;
 	
 	public Lexer(String text) {
@@ -32,6 +33,9 @@ public class Lexer {
 		
 		if (ch == StringDelimeter)
 			return this.nextString();
+		
+		if (separators.indexOf(ch)>=0)
+			return new Token(String.valueOf(ch), TokenType.SEPARATOR);
 		
 		StringBuilder builder = new StringBuilder();
 		builder.append(ch);

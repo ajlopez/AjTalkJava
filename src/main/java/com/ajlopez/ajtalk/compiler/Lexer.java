@@ -7,6 +7,7 @@ import java.io.StringReader;
 public class Lexer {
 	private static final char StringDelimeter = '\'';
 	private static final char CommentDelimeter = '"';
+	private static final char KeySuffix = ':';
 	private static final String separators = "().{}";
 	private Reader reader;
 	private int nextich = -1;
@@ -45,8 +46,11 @@ public class Lexer {
 			builder.append((char)ich);
 			ich = this.reader.read();
 		}
-		
-		this.pushChar(ich);
+
+		if (ich != -1 && (char)ich == KeySuffix)
+			return new Token(builder.toString() + ":", TokenType.KEYSELECTOR);
+		else
+			this.pushChar(ich);
 		
 		return new Token(builder.toString(), TokenType.ID);
 	}

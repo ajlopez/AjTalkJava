@@ -137,4 +137,34 @@ public class LexerTests {
 		
 		assertNull(lexer.nextToken());
 	}
+
+	@Test
+	public void simpleKeySelector() throws IOException, LexerException {
+		Lexer lexer = new Lexer("foo:");
+		Token token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.KEYSELECTOR, token.getType());
+		assertEquals("foo:", token.getValue());
+		
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
+	public void twoKeySelectors() throws IOException, LexerException {
+		Lexer lexer = new Lexer("foo:bar:");
+		Token token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.KEYSELECTOR, token.getType());
+		assertEquals("foo:", token.getValue());
+		
+		token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.KEYSELECTOR, token.getType());
+		assertEquals("bar:", token.getValue());
+		
+		assertNull(lexer.nextToken());
+	}
 }

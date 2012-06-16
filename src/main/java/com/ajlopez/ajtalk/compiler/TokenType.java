@@ -1,5 +1,5 @@
 package com.ajlopez.ajtalk.compiler;
 
 public enum TokenType {
-	ID, STRING, INTEGER, SEPARATOR
+	ID, KEYSELECTOR, BINSELECTOR, STRING, INTEGER, SEPARATOR
 }

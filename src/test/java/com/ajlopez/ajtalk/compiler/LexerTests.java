@@ -233,4 +233,34 @@ public class LexerTests {
 		
 		assertNull(lexer.nextToken());
 	}
+
+	@Test
+	public void simpleSymbol() throws IOException, LexerException {
+		Lexer lexer = new Lexer("#foo");
+		Token token = lexer.nextToken();
+		assertNotNull(token);
+		assertEquals(TokenType.SYMBOL, token.getType());
+		assertEquals("foo", token.getValue());
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
+	public void binarySymbol() throws IOException, LexerException {
+		Lexer lexer = new Lexer("#<>");
+		Token token = lexer.nextToken();
+		assertNotNull(token);
+		assertEquals(TokenType.SYMBOL, token.getType());
+		assertEquals("<>", token.getValue());
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
+	public void keywordSymbol() throws IOException, LexerException {
+		Lexer lexer = new Lexer("#foo:bar:");
+		Token token = lexer.nextToken();
+		assertNotNull(token);
+		assertEquals(TokenType.SYMBOL, token.getType());
+		assertEquals("foo:bar:", token.getValue());
+		assertNull(lexer.nextToken());
+	}
 }

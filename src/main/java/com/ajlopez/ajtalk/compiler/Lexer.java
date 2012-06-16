@@ -8,6 +8,7 @@ public class Lexer {
 	private static final char StringDelimeter = '\'';
 	private static final char CommentDelimeter = '"';
 	private static final char KeySuffix = ':';
+	private static final char SymbolPrefix = '#';
 	private static final String separators = "().{}";
 	private Reader reader;
 	private int nextich = -1;
@@ -34,6 +35,9 @@ public class Lexer {
 		if (ch == StringDelimeter)
 			return this.nextString();
 		
+		if (ch == SymbolPrefix)
+			return this.nextSymbol();
+		
 		if (separators.indexOf(ch)>=0)
 			return new Token(String.valueOf(ch), TokenType.SEPARATOR);
 		
@@ -56,6 +60,28 @@ public class Lexer {
 			this.pushChar(ich);
 		
 		return new Token(builder.toString(), TokenType.ID);
+	}
+	
+	private Token nextSymbol() throws IOException {
+		StringBuilder builder = new StringBuilder();
+		int ich = this.reader.read();
+		
+		while (ich != -1) {
+			char ch = (char)ich;
+			
+			if (Character.isSpaceChar(ch))
+				break;
+			
+			if (separators.indexOf(ch)>=0)
+				break;
+			
+			builder.append(ch);
+			ich = this.reader.read();
+		}
+		
+		this.pushChar(ich);
+		
+		return new Token(builder.toString(), TokenType.SYMBOL);		
 	}
 	
 	private Token nextInteger(char ch) throws IOException {

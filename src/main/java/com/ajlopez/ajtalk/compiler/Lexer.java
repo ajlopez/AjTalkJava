@@ -24,16 +24,35 @@ public class Lexer {
 		if (ich == -1)
 			return null;
 		
+		char ch = (char) ich;
+		
+		if (Character.isDigit(ch))
+			return nextInteger(ch);
+		
 		StringBuilder builder = new StringBuilder();
-		builder.append((char)ich);
+		builder.append(ch);
 		
 		ich = this.reader.read();
 		
-		while (ich != -1 && !(Character.isSpaceChar((char) ich) || Character.isISOControl((char) ich))) {
+		while (ich != -1 && Character.isLetterOrDigit((char) ich)) {
 			builder.append((char)ich);
 			ich = this.reader.read();
 		}
 		
 		return new Token(builder.toString(), TokenType.ID);
+	}
+	
+	private Token nextInteger(char ch) throws IOException {
+		StringBuilder builder = new StringBuilder();
+		builder.append(ch);
+		
+		int ich = this.reader.read();
+		
+		while (ich != -1 && Character.isDigit((char)ich)) {
+			builder.append((char)ich);
+			ich = this.reader.read();
+		}
+		
+		return new Token(builder.toString(), TokenType.INTEGER);		
 	}
 }

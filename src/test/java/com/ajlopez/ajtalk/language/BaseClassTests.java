@@ -7,6 +7,26 @@ import org.junit.Test;
 public class BaseClassTests {
 
 	@Test
+	public void createClass() {
+		BaseClass klass = new BaseClass(null);
+		assertEquals(0, klass.getObjectSize());
+		assertEquals(-1, klass.getVariableOffset("a"));
+	}
+
+	@Test
+	public void createClassWithInstanceVariables() {
+		BaseClass klass = new BaseClass(null, new String[] { "x", "y" });
+		assertEquals(2, klass.getObjectSize());
+	}
+
+	@Test
+	public void createSubclassWithInstanceVariables() {
+		BaseClass superklass = new BaseClass(null, new String[] { "x", "y" });
+		BaseClass klass = new BaseClass(superklass, new String[] { "z" });
+		assertEquals(3, klass.getObjectSize());
+	}
+
+	@Test
 	public void defineMethod() {
 		BaseClass klass = new BaseClass(null);
 		IMethod method = new MyMethod();

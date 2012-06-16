@@ -33,6 +33,14 @@ public class ExecutionBlock {
 				ip++;
 				this.locals[this.block.bytecodes[ip]] = stack[--position];
 				break;
+			case Bytecodes.ADD:
+				Object op2 = stack[--position];
+				Object op1 = stack[--position];
+				Object result = null;
+				if (op1 instanceof Integer && op2 instanceof Integer)
+					result = ((Integer) op1).intValue() + ((Integer) op2).intValue();
+				stack[position++] = result;
+				break;
 			}
 			
 			ip++;

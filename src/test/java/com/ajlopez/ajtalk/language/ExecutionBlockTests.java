@@ -25,4 +25,11 @@ public class ExecutionBlockTests {
 		Block block = new Block(1, 1, bytecodes );
 		assertEquals(1, block.execute(new Object[] { 1 }));
 	}
+
+	@Test
+	public void executeAddIntegers() {
+		byte[] bytecodes = new byte[] { Bytecodes.GETARG, 0, Bytecodes.GETARG, 1, Bytecodes.ADD, Bytecodes.RETURN };
+		Block block = new Block(1, 1, bytecodes );
+		assertEquals(3, block.execute(new Object[] { 1, 2 }));
+	}
 }

@@ -1,29 +1,29 @@
 package com.ajlopez.ajtalk.language;
 
 public class ExecutionBlock {
-	private Method method;
+	private Block block;
 	private Object[] locals;
 	
-	public ExecutionBlock(Method method) {
-		this.method = method;
+	public ExecutionBlock(Block block) {
+		this.block = block;
 		
-		if (method.nlocals > 0)
-			this.locals = new Object[method.nlocals];
+		if (block.nlocals > 0)
+			this.locals = new Object[block.nlocals];
 	}
 	
 	public Object execute(Object self, Object[] arguments) {
 		Object[] stack = new Object[5];
 		int position = 0;
 		int ip = 0;
-		int bclength = this.method.bytecodes.length;
+		int bclength = this.block.bytecodes.length;
 		
 		while (ip < bclength) {
-			switch (this.method.bytecodes[ip]) {
+			switch (this.block.bytecodes[ip]) {
 			case Bytecodes.RETURN:
 				return stack[position-1];
 			case Bytecodes.LOADARG:
 				ip++;
-				stack[position++] = arguments[this.method.bytecodes[ip]];
+				stack[position++] = arguments[this.block.bytecodes[ip]];
 			}
 			
 			ip++;

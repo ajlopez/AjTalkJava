@@ -1,14 +1,8 @@
 package com.ajlopez.ajtalk.language;
 
-public class Method implements IMethod {
-	int arity;
-	int nlocals;
-	byte[] bytecodes;
-	
+public class Method extends Block implements IMethod {
 	public Method(int arity, int nlocals, byte[] bytecodes) {
-		this.arity = arity;
-		this.nlocals = nlocals;
-		this.bytecodes = bytecodes;
+		super(arity, nlocals, bytecodes);
 	}
 	
 	@Override

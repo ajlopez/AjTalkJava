@@ -6,6 +6,7 @@ import java.io.StringReader;
 
 public class Lexer {
 	private static final char StringDelimeter = '\'';
+	private static final char CommentDelimeter = '"';
 	private static final String separators = "().{}";
 	private Reader reader;
 	
@@ -18,15 +19,12 @@ public class Lexer {
 	}
 	
 	public Token nextToken() throws IOException, LexerException {
-		int ich = this.reader.read();
-		
-		while (ich != -1 && (Character.isSpaceChar((char) ich) || Character.isISOControl((char) ich)))
-			ich = this.reader.read();
+		int ich = this.nextCharToProcess();
 		
 		if (ich == -1)
 			return null;
 		
-		char ch = (char) ich;
+		char ch = (char) ich;		
 		
 		if (Character.isDigit(ch))
 			return this.nextInteger(ch);
@@ -79,4 +77,28 @@ public class Lexer {
 		
 		return new Token(builder.toString(), TokenType.STRING);		
 	}
+	
+	private int nextCharToProcess() throws IOException, LexerException {
+		int ich;
+		
+		for (ich = this.reader.read(); ich != -1; ich = this.reader.read()) {
+			char ch = (char)ich;
+			
+			if (Character.isSpaceChar(ch) || Character.isISOControl(ch))
+				continue;
+			
+			if (ch == CommentDelimeter) {
+				for (ich = this.reader.read(); ich != -1 && (char)ich != CommentDelimeter; ich = this.reader.read())
+					;
+				
+				if (ich == -1)
+					throw new LexerException("Unclosed comment");
+			}
+			else
+				return ich;
+		}
+		
+		return ich;
+	}
+	
 }

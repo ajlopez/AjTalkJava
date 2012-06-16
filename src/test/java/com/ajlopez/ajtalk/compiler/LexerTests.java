@@ -21,6 +21,18 @@ public class LexerTests {
 	}
 
 	@Test
+	public void skipComment() throws IOException, LexerException {
+		Lexer lexer = new Lexer(" \"This is a comment\"  ");
+		assertNull(lexer.nextToken());
+	}
+
+	@Test(expected=LexerException.class)
+	public void unclosedComment() throws IOException, LexerException {
+		Lexer lexer = new Lexer(" \"This is a comment  ");
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
 	public void simpleId() throws IOException, LexerException {
 		Lexer lexer = new Lexer("foo");
 		Token token = lexer.nextToken();

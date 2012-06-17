@@ -23,17 +23,20 @@ public class Parser {
 			return null;
 
 		this.pushToken(token);
+
+		return this.parseUnaryExpression();
+	}
+	
+	private Node parseUnaryExpression() throws ParserException, IOException, LexerException {
+		Node expression = this.parseTerm();
+		Token token = null;
 		
-		Node term = this.parseTerm();
+		for (token = this.nextToken(); token != null && token.getType() == TokenType.ID; token = this.nextToken())
+			expression = new UnaryMessageNode(expression, token.getValue());
 		
-		token = this.nextToken();
+		this.pushToken(token);
 		
-		if (token == null)
-			return term;
-		if (token.getType() == TokenType.ID)
-			return new UnaryMessageNode(term, token.getValue());
-		
-		throw new ParserException("Unexpected '" + token.getValue() + "'");
+		return expression;
 	}
 	
 	private Node parseTerm() throws ParserException, IOException, LexerException

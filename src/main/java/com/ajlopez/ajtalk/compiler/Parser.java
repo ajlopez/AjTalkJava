@@ -2,8 +2,7 @@ package com.ajlopez.ajtalk.compiler;
 
 import java.io.IOException;
 
-import com.ajlopez.ajtalk.compiler.ast.IntegerNode;
-import com.ajlopez.ajtalk.compiler.ast.Node;
+import com.ajlopez.ajtalk.compiler.ast.*;
 
 public class Parser {
 	private Lexer lexer;
@@ -23,6 +22,10 @@ public class Parser {
 			return null;
 		if (token.getType() == TokenType.INTEGER)
 			return new IntegerNode(Integer.parseInt(token.getValue()));
+		if (token.getType() == TokenType.STRING)
+			return new StringNode(token.getValue());
+		if (token.getType() == TokenType.ID)
+			return new IdNode(token.getValue());
 		
 		throw new ParserException("Unexpected '" + token.getValue() + "'");
 	}

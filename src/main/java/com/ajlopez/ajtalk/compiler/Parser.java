@@ -24,7 +24,19 @@ public class Parser {
 
 		this.pushToken(token);
 
-		return this.parseUnaryExpression();
+		return this.parseBinaryExpression();
+	}
+	
+	private Node parseBinaryExpression() throws ParserException, IOException, LexerException {
+		Node expression = this.parseUnaryExpression();
+		Token token = null;
+		
+		for (token = this.nextToken(); token != null && token.getType() == TokenType.BINSELECTOR; token = this.nextToken())
+			expression = new BinaryMessageNode(expression, token.getValue(), this.parseUnaryExpression());
+		
+		this.pushToken(token);
+		
+		return expression;
 	}
 	
 	private Node parseUnaryExpression() throws ParserException, IOException, LexerException {

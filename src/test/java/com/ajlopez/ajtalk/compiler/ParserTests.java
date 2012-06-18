@@ -97,4 +97,50 @@ public class ParserTests {
 		
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void keywordMessageNodeWithOneArgument() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("foo bar: 1");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof KeywordMessageNode);
+		assertEquals("bar:", ((KeywordMessageNode)node).getSelector());
+		
+		KeywordMessageNode knode = (KeywordMessageNode)node;		
+		Node target = knode.getTarget();
+		
+		assertNotNull(target);
+		assertTrue(target instanceof IdNode);
+		assertEquals("foo", ((IdNode)target).getName());
+		
+		assertNotNull(knode.getArguments());
+		assertEquals(1, knode.getArguments().length);
+		
+		assertNull(parser.parseExpressionNode());
+	}
+
+	@Test
+	public void keywordMessageNodeWithTwoArguments() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("x foo: 1 bar: 2");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof KeywordMessageNode);
+		assertEquals("foo:bar:", ((KeywordMessageNode)node).getSelector());
+		
+		KeywordMessageNode knode = (KeywordMessageNode)node;		
+		Node target = knode.getTarget();
+		
+		assertNotNull(target);
+		assertTrue(target instanceof IdNode);
+		assertEquals("x", ((IdNode)target).getName());
+		
+		assertNotNull(knode.getArguments());
+		assertEquals(2, knode.getArguments().length);
+		
+		assertNull(parser.parseExpressionNode());
+	}
 }

@@ -1,6 +1,8 @@
 package com.ajlopez.ajtalk.compiler;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ajlopez.ajtalk.compiler.ast.*;
 
@@ -24,7 +26,33 @@ public class Parser {
 
 		this.pushToken(token);
 
-		return this.parseBinaryExpression();
+		return this.parseKeywordExpression();
+	}
+	
+	private Node parseKeywordExpression() throws ParserException, IOException, LexerException {
+		Node expression = this.parseBinaryExpression();
+		Token token = null;
+		List<Node> arguments = null;
+		String selector = null;
+		
+		for (token = this.nextToken(); token != null && token.getType() == TokenType.KEYSELECTOR; token = this.nextToken()) {
+			if (selector == null) {
+				arguments = new ArrayList<Node>();
+				selector = token.getValue();
+			}
+			else
+				selector += token.getValue();
+			arguments.add(this.parseBinaryExpression());
+		}
+		
+		this.pushToken(token);
+		
+		if (selector != null) {
+			Node[] args = new Node[arguments.size()];
+			expression = new KeywordMessageNode(expression, selector, arguments.toArray(args));
+		}
+		
+		return expression;
 	}
 	
 	private Node parseBinaryExpression() throws ParserException, IOException, LexerException {

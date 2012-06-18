@@ -118,6 +118,12 @@ public class ParserTests {
 		assertNotNull(knode.getArguments());
 		assertEquals(1, knode.getArguments().length);
 		
+		Node argument = knode.getArguments()[0];
+		
+		assertNotNull(argument);
+		assertTrue(argument instanceof IntegerNode);
+		assertEquals(1, ((IntegerNode)argument).getValue());
+		
 		assertNull(parser.parseExpressionNode());
 	}
 

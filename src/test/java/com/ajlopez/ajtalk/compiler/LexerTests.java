@@ -80,7 +80,7 @@ public class LexerTests {
 
 	@Test
 	public void separators() throws IOException, LexerException {
-		Lexer lexer = new Lexer("().{}");
+		Lexer lexer = new Lexer("()[].{}");
 		Token token = lexer.nextToken();
 		
 		assertNotNull(token);
@@ -92,6 +92,18 @@ public class LexerTests {
 		assertNotNull(token);
 		assertEquals(TokenType.SEPARATOR, token.getType());
 		assertEquals(")", token.getValue());
+
+		token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.SEPARATOR, token.getType());
+		assertEquals("[", token.getValue());
+
+		token = lexer.nextToken();		
+
+		assertNotNull(token);
+		assertEquals(TokenType.SEPARATOR, token.getType());
+		assertEquals("]", token.getValue());
 		
 		token = lexer.nextToken();		
 

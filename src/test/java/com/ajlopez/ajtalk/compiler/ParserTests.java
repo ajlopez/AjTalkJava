@@ -213,4 +213,26 @@ public class ParserTests {
 		
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void simpleBlock() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("[foo do: bar. 1 + 2. bar do: foo]");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof BlockNode);
+		
+		BlockNode bnode = (BlockNode)node;
+		
+		assertNotNull(bnode.getExpression());
+		assertTrue(bnode.getExpression() instanceof CompositeExpressionNode);
+		
+		CompositeExpressionNode cenode = (CompositeExpressionNode)bnode.getExpression();
+		
+		assertNotNull(cenode.getExpressions());
+		assertEquals(3, cenode.getExpressions().length);
+		
+		assertNull(parser.parseExpressionNode());
+	}
 }

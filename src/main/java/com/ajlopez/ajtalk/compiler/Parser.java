@@ -121,6 +121,12 @@ public class Parser {
 			return expr;
 		}
 		
+		if (token.getType() == TokenType.SEPARATOR && token.getValue().equals("[")) {
+			Node expr = this.parseExpressionNode();
+			this.parseToken("]", TokenType.SEPARATOR);
+			return new BlockNode(expr);
+		}
+		
 		throw new ParserException("Unexpected '" + token.getValue() + "'");
 	}
 	

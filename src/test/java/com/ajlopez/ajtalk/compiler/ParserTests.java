@@ -149,4 +149,17 @@ public class ParserTests {
 		
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void idNodeInParentheses() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("(foo)");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof IdNode);
+		assertEquals("foo", ((IdNode)node).getName());
+		
+		assertNull(parser.parseExpressionNode());
+	}
 }

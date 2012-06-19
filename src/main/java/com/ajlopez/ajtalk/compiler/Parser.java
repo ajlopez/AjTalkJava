@@ -85,14 +85,30 @@ public class Parser {
 		
 		if (token == null)
 			return null;
-		if (token.getType() == TokenType.INTEGER)
+		
+		switch (token.getType()) {
+		case INTEGER:
 			return new IntegerNode(Integer.parseInt(token.getValue()));
-		if (token.getType() == TokenType.STRING)
+		case STRING:
 			return new StringNode(token.getValue());
-		if (token.getType() == TokenType.ID)
+		case ID:
 			return new IdNode(token.getValue());
+		}
+		
+		if (token.getType() == TokenType.SEPARATOR && token.getValue().equals("(")) {
+			Node expr = this.parseExpressionNode();
+			this.parseToken(")", TokenType.SEPARATOR);
+			return expr;
+		}
 		
 		throw new ParserException("Unexpected '" + token.getValue() + "'");
+	}
+	
+	private void parseToken(String value, TokenType type) throws IOException, LexerException, ParserException {
+		Token token = this.nextToken();
+		
+		if (token == null || token.getType() != type || !token.getValue().equals(value))
+			throw new ParserException("Expected '" + value + "'");
 	}
 	
 	private Token nextToken() throws IOException, LexerException {

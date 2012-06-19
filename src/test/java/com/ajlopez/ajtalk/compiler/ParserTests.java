@@ -179,4 +179,38 @@ public class ParserTests {
 		
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void simpleComposite() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("foo do: bar. 1 + 2");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof CompositeExpressionNode);
+		
+		CompositeExpressionNode cenode = (CompositeExpressionNode)node;
+		
+		assertNotNull(cenode.getExpressions());
+		assertEquals(2, cenode.getExpressions().length);
+		
+		assertNull(parser.parseExpressionNode());
+	}
+
+	@Test
+	public void threeExpressionsInComposite() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("foo do: bar. 1 + 2. bar do: foo");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof CompositeExpressionNode);
+		
+		CompositeExpressionNode cenode = (CompositeExpressionNode)node;
+		
+		assertNotNull(cenode.getExpressions());
+		assertEquals(3, cenode.getExpressions().length);
+		
+		assertNull(parser.parseExpressionNode());
+	}
 }

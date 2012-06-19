@@ -26,9 +26,29 @@ public class Parser {
 
 		this.pushToken(token);
 
-		return this.parseKeywordExpression();
+		Node node = this.parseKeywordExpression();
+		List<Node> list = null;
+		
+		for (token = this.nextToken(); token != null && token.getType() == TokenType.SEPARATOR && token.getValue().equals("."); token = this.nextToken()) {
+			if (list == null) {
+				list = new ArrayList<Node>();
+				list.add(node);
+			}
+			
+			list.add(this.parseKeywordExpression());
+		}
+		
+		this.pushToken(token);
+		
+		if (list == null)		
+			return node;
+		
+		Node[] nodes = new Node[list.size()];
+		nodes = list.toArray(nodes);
+		
+		return new CompositeExpressionNode(nodes);
 	}
-	
+		
 	private Node parseKeywordExpression() throws ParserException, IOException, LexerException {
 		Node expression = this.parseBinaryExpression();
 		Token token = null;

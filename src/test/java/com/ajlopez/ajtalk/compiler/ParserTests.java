@@ -162,4 +162,21 @@ public class ParserTests {
 		
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void keywordAndBinaryMessageInParentheses() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("(foo with: bar) + 2");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof BinaryMessageNode);
+		
+		BinaryMessageNode bnode = (BinaryMessageNode)node;
+		
+		assertTrue(bnode.getTarget() instanceof KeywordMessageNode);
+		assertEquals("+", bnode.getSelector());
+		
+		assertNull(parser.parseExpressionNode());
+	}
 }

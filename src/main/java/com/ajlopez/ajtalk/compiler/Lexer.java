@@ -7,9 +7,10 @@ import java.io.StringReader;
 public class Lexer {
 	private static final char StringDelimeter = '\'';
 	private static final char CommentDelimeter = '"';
+	private static final char ArgumentPrefix = ':';
 	private static final char KeySuffix = ':';
 	private static final char SymbolPrefix = '#';
-	private static final String separators = "()[].{}";
+	private static final String separators = "()[].{}|";
 	private Reader reader;
 	private int nextich = -1;
 	
@@ -37,6 +38,9 @@ public class Lexer {
 		
 		if (ch == SymbolPrefix)
 			return this.nextSymbol();
+
+		if (ch == ArgumentPrefix)
+			return new Token(String.valueOf(ch), TokenType.SEPARATOR);
 		
 		if (separators.indexOf(ch)>=0)
 			return new Token(String.valueOf(ch), TokenType.SEPARATOR);

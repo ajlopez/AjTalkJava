@@ -235,4 +235,23 @@ public class ParserTests {
 		
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void simpleBlockWithArguments() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("[:x :y | foo do: bar. 1 + 2. bar do: foo]");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof BlockNode);
+		
+		BlockNode bnode = (BlockNode)node;
+		
+		assertNotNull(bnode.getExpression());
+		assertTrue(bnode.getExpression() instanceof CompositeExpressionNode);
+		assertNotNull(bnode.getArguments());
+		assertEquals(2, bnode.getArguments().length);
+		
+		assertNull(parser.parseExpressionNode());
+	}
 }

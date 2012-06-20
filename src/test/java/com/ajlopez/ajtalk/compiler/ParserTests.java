@@ -226,6 +226,8 @@ public class ParserTests {
 		BlockNode bnode = (BlockNode)node;
 		
 		assertNotNull(bnode.getExpression());
+		assertNull(bnode.getArguments());
+		assertNull(bnode.getLocals());
 		assertTrue(bnode.getExpression() instanceof CompositeExpressionNode);
 		
 		CompositeExpressionNode cenode = (CompositeExpressionNode)bnode.getExpression();
@@ -250,8 +252,44 @@ public class ParserTests {
 		assertNotNull(bnode.getExpression());
 		assertTrue(bnode.getExpression() instanceof CompositeExpressionNode);
 		assertNotNull(bnode.getArguments());
-		assertEquals(2, bnode.getArguments().length);
 		
+		String[] arguments = bnode.getArguments();
+		assertEquals(2, arguments.length);
+		assertEquals("x", arguments[0]);
+		assertEquals("y", arguments[1]);
+		
+		assertNull(bnode.getLocals());
+
+		assertNull(parser.parseExpressionNode());
+	}
+
+	@Test
+	public void simpleBlockWithArgumentsAndLocals() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("[:x :y | |a b| foo do: bar. 1 + 2. bar do: foo]");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof BlockNode);
+		
+		BlockNode bnode = (BlockNode)node;
+		
+		assertNotNull(bnode.getExpression());
+		assertTrue(bnode.getExpression() instanceof CompositeExpressionNode);
+		assertNotNull(bnode.getArguments());
+		
+		String[] arguments = bnode.getArguments();
+		assertEquals(2, arguments.length);
+		assertEquals("x", arguments[0]);
+		assertEquals("y", arguments[1]);
+		
+		assertNotNull(bnode.getLocals());
+		
+		String[] locals = bnode.getLocals();
+		assertEquals(2, locals.length);
+		assertEquals("a", locals[0]);
+		assertEquals("b", locals[1]);
+
 		assertNull(parser.parseExpressionNode());
 	}
 }

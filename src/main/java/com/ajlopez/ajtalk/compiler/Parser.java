@@ -123,12 +123,33 @@ public class Parser {
 		
 		if (token.getType() == TokenType.SEPARATOR && token.getValue().equals("[")) {
 			String[] arguments = this.parseArgumentNames();
+			String[] locals = this.parseLocalNames();
 			Node expr = this.parseExpressionNode();
 			this.parseToken("]", TokenType.SEPARATOR);
-			return new BlockNode(arguments, expr);
+			return new BlockNode(arguments, locals, expr);
 		}
 		
 		throw new ParserException("Unexpected '" + token.getValue() + "'");
+	}
+	
+	private String[] parseLocalNames() throws IOException, LexerException, ParserException {
+		Token token = this.nextToken();
+		
+		if (!(token != null && token.getType()==TokenType.SEPARATOR && token.getValue().equals("|"))) {
+			this.pushToken(token);
+			return null;
+		}		
+		
+		List<String> names = new ArrayList<String>();
+
+		for (token = this.nextToken(); token != null && token.getType()==TokenType.ID; token = this.nextToken())
+			names.add(token.getValue());
+
+		if (token == null || token.getType() != TokenType.SEPARATOR || !token.getValue().equals("|"))
+			throw new ParserException("Expected '|'");
+		
+		String[] localnames = new String[names.size()];
+		return names.toArray(localnames);
 	}
 	
 	private String[] parseArgumentNames() throws IOException, LexerException, ParserException {

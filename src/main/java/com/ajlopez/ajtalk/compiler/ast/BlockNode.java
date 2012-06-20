@@ -3,9 +3,11 @@ package com.ajlopez.ajtalk.compiler.ast;
 public class BlockNode extends Node {
 	private Node expression;
 	private String[] arguments;
+	private String[] locals;
 	
-	public BlockNode(String[] arguments, Node expression) {
+	public BlockNode(String[] arguments, String[] locals, Node expression) {
 		this.arguments = arguments;
+		this.locals = locals;
 		this.expression = expression;
 	}
 	
@@ -15,5 +17,9 @@ public class BlockNode extends Node {
 	
 	public String[] getArguments() {
 		return this.arguments;
+	}
+	
+	public String[] getLocals() {
+		return this.locals;
 	}
 }

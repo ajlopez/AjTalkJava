@@ -310,4 +310,16 @@ public class ParserTests {
 
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void simpleReturn() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("^a + 2 - 1");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof ReturnNode);
+
+		assertNull(parser.parseExpressionNode());
+	}
 }

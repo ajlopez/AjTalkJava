@@ -120,6 +120,11 @@ public class Parser {
 			return new IdNode(name);
 		}
 		
+		if (token.getType() == TokenType.SEPARATOR && token.getValue().equals("^")) {
+			Node expr = this.parseKeywordExpression();
+			return new ReturnNode(expr);
+		}
+		
 		if (token.getType() == TokenType.SEPARATOR && token.getValue().equals("(")) {
 			Node expr = this.parseKeywordExpression();
 			this.parseToken(")", TokenType.SEPARATOR);

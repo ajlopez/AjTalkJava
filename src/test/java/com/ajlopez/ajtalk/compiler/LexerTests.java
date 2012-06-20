@@ -59,6 +59,18 @@ public class LexerTests {
 	}
 
 	@Test
+	public void assignment() throws IOException, LexerException {
+		Lexer lexer = new Lexer(":=");
+		
+		Token token = lexer.nextToken();
+		assertNotNull(token);
+		assertEquals(TokenType.BINSELECTOR, token.getType());
+		assertEquals(":=", token.getValue());
+		
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
 	public void simpleIdWithSpaces() throws IOException, LexerException {
 		Lexer lexer = new Lexer("  foo  ");
 		Token token = lexer.nextToken();

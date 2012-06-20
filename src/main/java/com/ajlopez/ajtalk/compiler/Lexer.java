@@ -40,13 +40,13 @@ public class Lexer {
 			return this.nextSymbol();
 
 		if (ch == ArgumentPrefix)
-			return new Token(String.valueOf(ch), TokenType.SEPARATOR);
+			return this.nextBinSelector(ch);
 		
 		if (separators.indexOf(ch)>=0)
 			return new Token(String.valueOf(ch), TokenType.SEPARATOR);
 		
 		if (!Character.isLetterOrDigit(ch))
-			return nextBinSelector(ch);
+			return this.nextBinSelector(ch);
 		
 		StringBuilder builder = new StringBuilder();
 		builder.append(ch);
@@ -123,6 +123,11 @@ public class Lexer {
 		}
 		
 		this.pushChar(ich);
+		
+		String value = builder.toString();
+		
+		if (value.length() == 1 && value.charAt(0) == ArgumentPrefix)
+			return new Token(value, TokenType.SEPARATOR);		
 		
 		return new Token(builder.toString(), TokenType.BINSELECTOR);		
 	}

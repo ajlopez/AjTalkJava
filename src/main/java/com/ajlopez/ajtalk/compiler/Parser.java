@@ -112,11 +112,16 @@ public class Parser {
 		case STRING:
 			return new StringNode(token.getValue());
 		case ID:
-			return new IdNode(token.getValue());
+			String name = token.getValue();
+			token = this.nextToken();
+			if (token != null && token.getType() == TokenType.BINSELECTOR && token.getValue().equals(":="))
+				return new AssignmentNode(name, this.parseKeywordExpression());
+			this.pushToken(token);
+			return new IdNode(name);
 		}
 		
 		if (token.getType() == TokenType.SEPARATOR && token.getValue().equals("(")) {
-			Node expr = this.parseExpressionNode();
+			Node expr = this.parseKeywordExpression();
 			this.parseToken(")", TokenType.SEPARATOR);
 			return expr;
 		}

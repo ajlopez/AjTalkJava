@@ -292,4 +292,22 @@ public class ParserTests {
 
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void simpleAssignment() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("a := foo do: bar with: 2 + 1");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof AssignmentNode);
+		
+		AssignmentNode anode = (AssignmentNode)node;
+		
+		assertNotNull(anode.getExpression());
+		assertNotNull(anode.getTarget());
+		assertEquals("a", anode.getTarget());
+
+		assertNull(parser.parseExpressionNode());
+	}
 }

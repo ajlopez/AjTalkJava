@@ -207,6 +207,24 @@ public class LexerTests {
 	}
 
 	@Test
+	public void separatorsAndInteger() throws IOException, LexerException {
+		Lexer lexer = new Lexer("#(1");
+		Token token = lexer.nextToken();
+		
+		assertNotNull(token);
+		assertEquals(TokenType.SEPARATOR, token.getType());
+		assertEquals("#(", token.getValue());
+
+		token = lexer.nextToken();		
+
+		assertNotNull(token);
+		assertEquals(TokenType.INTEGER, token.getType());
+		assertEquals("1", token.getValue());
+		
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
 	public void simpleKeySelector() throws IOException, LexerException {
 		Lexer lexer = new Lexer("foo:");
 		Token token = lexer.nextToken();

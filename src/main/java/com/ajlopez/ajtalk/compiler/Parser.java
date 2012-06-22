@@ -139,7 +139,44 @@ public class Parser {
 			return new BlockNode(arguments, locals, expr);
 		}
 		
+		if (token.getType() == TokenType.SEPARATOR && token.getValue().equals("#(")) {
+			Node[] elements = this.parseLiteralArrayElements();
+			return new LiteralArrayNode(elements);
+		}
+		
 		throw new ParserException("Unexpected '" + token.getValue() + "'");
+	}
+	
+	private Node[] parseLiteralArrayElements() throws IOException, LexerException, ParserException
+	{
+		List<Node> nodes = new ArrayList<Node>();
+		
+		Token token;
+		
+		for (token = this.nextToken(); token != null; token = this.nextToken()) {
+			if (token.getType() == TokenType.SEPARATOR && token.getValue().equals(")"))
+				break;
+			switch (token.getType()) {
+			case CHARACTER:
+				nodes.add(new CharacterNode(token.getValue().charAt(0)));
+				break;
+			case INTEGER:
+				nodes.add(new IntegerNode(Integer.parseInt(token.getValue())));
+				break;
+			case STRING:
+				nodes.add(new StringNode(token.getValue()));
+				break;
+			case SYMBOL:
+				nodes.add(new SymbolNode(token.getValue()));
+				break;
+			default:
+				throw new ParserException("Unexpected '" + token.getValue() + "'");
+			}
+		}
+		
+		Node[] elements = new Node[nodes.size()];
+		
+		return nodes.toArray(elements);
 	}
 	
 	private String[] parseLocalNames() throws IOException, LexerException, ParserException {

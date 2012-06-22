@@ -198,6 +198,23 @@ public class ParserTests {
 	}
 
 	@Test
+	public void simpleLiteralArray() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("#(1 'Hello' #symbol $x)");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof LiteralArrayNode);
+		
+		LiteralArrayNode lanode = (LiteralArrayNode)node;
+		
+		assertNotNull(lanode.getElements());
+		assertEquals(4, lanode.getElements().length);
+		
+		assertNull(parser.parseExpressionNode());
+	}
+
+	@Test
 	public void threeExpressionsInComposite() throws ParserException, IOException, LexerException {
 		Parser parser = new Parser("foo do: bar. 1 + 2. bar do: foo");
 		

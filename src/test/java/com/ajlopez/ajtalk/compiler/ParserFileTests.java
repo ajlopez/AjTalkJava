@@ -36,6 +36,19 @@ public class ParserFileTests {
 		assertNull(mnode.getArguments());
 	}
 	
+	@Test
+	public void parseMethodGreaterEqual() throws IOException, ParserException, LexerException {
+		Node node = this.parseMethodFromResource("MethodGreaterEqual.st");
+		assertNotNull(node);
+		assertTrue(node instanceof MethodNode);
+		
+		MethodNode mnode = (MethodNode)node;
+		assertEquals(">=", mnode.getSelector());
+		assertNotNull(mnode.getArguments());
+		assertEquals(1, mnode.getArguments().length);
+		assertEquals("aPoint", mnode.getArguments()[0]);
+	}
+	
 	private Node parseMethodFromResource(String name) throws IOException, ParserException, LexerException {
 		Lexer lexer = new Lexer(new InputStreamReader(getClass().getResourceAsStream(name)));
 		Parser parser = new Parser(lexer);

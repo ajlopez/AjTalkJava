@@ -37,6 +37,17 @@ public class ParserFileTests {
 	}
 	
 	@Test
+	public void parseMethodDeepCopy() throws IOException, ParserException, LexerException {
+		Node node = this.parseMethodFromResource("MethodDeepCopy.st");
+		assertNotNull(node);
+		assertTrue(node instanceof MethodNode);
+		
+		MethodNode mnode = (MethodNode)node;
+		assertEquals("deepCopy", mnode.getSelector());
+		assertNull(mnode.getArguments());
+	}
+	
+	@Test
 	public void parseMethodGreaterEqual() throws IOException, ParserException, LexerException {
 		Node node = this.parseMethodFromResource("MethodGreaterEqual.st");
 		assertNotNull(node);

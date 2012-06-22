@@ -356,4 +356,40 @@ public class ParserTests {
 
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void unaryMethod() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("x ^x");
+		
+		Node node = parser.parseMethodNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof MethodNode);
+		
+		MethodNode mnode = (MethodNode)node;
+		assertEquals("x", mnode.getSelector());
+		assertNull(mnode.getArguments());
+		assertNull(mnode.getLocals());
+		
+		assertNull(parser.parseExpressionNode());
+	}
+
+	@Test
+	public void binaryMethod() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("+ y ^x+y");
+		
+		Node node = parser.parseMethodNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof MethodNode);
+		
+		MethodNode mnode = (MethodNode)node;
+		assertEquals("+", mnode.getSelector());
+		assertNotNull(mnode.getArguments());
+		assertEquals(1, mnode.getArguments().length);
+		assertEquals("y", mnode.getArguments()[0]);
+		assertNull(mnode.getLocals());
+		
+		assertNull(parser.parseExpressionNode());
+	}
 }

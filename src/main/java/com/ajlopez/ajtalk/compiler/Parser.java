@@ -18,6 +18,30 @@ public class Parser {
 		this.lexer = lexer;
 	}
 	
+	public Node parseMethodNode()  throws ParserException, IOException, LexerException {
+		Token token = this.nextToken();
+		
+		if (token == null)
+			return null;
+
+		if (token.getType() == TokenType.ID) {
+			String selector = token.getValue();
+			String[] locals = this.parseLocalNames();
+			Node expr = this.parseExpressionNode();
+			return new MethodNode(selector, null, locals, expr);
+		}
+		
+		if (token.getType() == TokenType.BINSELECTOR) {
+			String selector = token.getValue();
+			String[] arguments = new String[] { this.parseId() };
+			String[] locals = this.parseLocalNames();
+			Node expr = this.parseExpressionNode();
+			return new MethodNode(selector, arguments, locals, expr);
+		}
+		
+		throw new ParserException("Unexpected '" + token.getValue() + "'");
+	}
+	
 	public Node parseExpressionNode() throws ParserException, IOException, LexerException {
 		Token token = this.nextToken();
 		

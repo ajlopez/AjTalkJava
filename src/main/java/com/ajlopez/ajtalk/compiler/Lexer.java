@@ -11,7 +11,7 @@ public class Lexer {
 	private static final char CharacterPrefix = '$';
 	private static final char KeySuffix = ':';
 	private static final char SymbolPrefix = '#';
-	private static final String separators = "^()[].{}|";
+	private static final String separators = "^()[].{}|!";
 	private Reader reader;
 	private int nextich = -1;
 	

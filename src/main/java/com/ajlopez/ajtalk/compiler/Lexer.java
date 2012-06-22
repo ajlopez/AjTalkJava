@@ -8,6 +8,7 @@ public class Lexer {
 	private static final char StringDelimeter = '\'';
 	private static final char CommentDelimeter = '"';
 	private static final char ArgumentPrefix = ':';
+	private static final char CharacterPrefix = '$';
 	private static final char KeySuffix = ':';
 	private static final char SymbolPrefix = '#';
 	private static final String separators = "^()[].{}|";
@@ -39,6 +40,9 @@ public class Lexer {
 		if (ch == SymbolPrefix)
 			return this.nextSymbol();
 
+		if (ch == CharacterPrefix)
+			return this.nextCharacter();
+
 		if (ch == ArgumentPrefix)
 			return this.nextBinSelector(ch);
 		
@@ -64,6 +68,17 @@ public class Lexer {
 			this.pushChar(ich);
 		
 		return new Token(builder.toString(), TokenType.ID);
+	}
+	
+	private Token nextCharacter() throws IOException, LexerException {
+		int ich = this.reader.read();
+		
+		if (ich == -1)
+			throw new LexerException("Expected character");
+		
+		char ch = (char)ich;
+		
+		return new Token(String.valueOf(ch), TokenType.CHARACTER);
 	}
 	
 	private Token nextSymbol() throws IOException {

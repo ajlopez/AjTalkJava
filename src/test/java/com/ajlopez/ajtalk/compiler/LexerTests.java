@@ -91,6 +91,16 @@ public class LexerTests {
 	}
 
 	@Test
+	public void simpleCharacter() throws IOException, LexerException {
+		Lexer lexer = new Lexer("$x");
+		Token token = lexer.nextToken();
+		assertNotNull(token);
+		assertEquals(TokenType.CHARACTER, token.getType());
+		assertEquals("x", token.getValue());
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
 	public void simpleString() throws IOException, LexerException {
 		Lexer lexer = new Lexer("'bar'");
 		Token token = lexer.nextToken();

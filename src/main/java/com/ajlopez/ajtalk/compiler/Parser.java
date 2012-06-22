@@ -39,6 +39,23 @@ public class Parser {
 			return new MethodNode(selector, arguments, locals, expr);
 		}
 		
+		if (token.getType() == TokenType.KEYSELECTOR) {
+			String selector = token.getValue();
+			List<String> ids = new ArrayList<String>();
+			ids.add(this.parseId());
+			
+			for (token = this.nextToken(); token != null && token.getType() == TokenType.KEYSELECTOR; token = this.nextToken()) {
+				selector += token.getValue();
+				ids.add(this.parseId());
+			}
+			
+			String[] arguments = new String[ids.size()];
+			arguments = ids.toArray(arguments);
+			String[] locals = this.parseLocalNames();
+			Node expr = this.parseExpressionNode();
+			return new MethodNode(selector, arguments, locals, expr);
+		}
+		
 		throw new ParserException("Unexpected '" + token.getValue() + "'");
 	}
 	

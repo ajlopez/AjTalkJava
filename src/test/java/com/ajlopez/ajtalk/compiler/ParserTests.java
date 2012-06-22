@@ -392,4 +392,24 @@ public class ParserTests {
 		
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void keywordMethod() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("with: a with:b ^a+b");
+		
+		Node node = parser.parseMethodNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof MethodNode);
+		
+		MethodNode mnode = (MethodNode)node;
+		assertEquals("with:with:", mnode.getSelector());
+		assertNotNull(mnode.getArguments());
+		assertEquals(2, mnode.getArguments().length);
+		assertEquals("a", mnode.getArguments()[0]);
+		assertEquals("b", mnode.getArguments()[1]);
+		assertNull(mnode.getLocals());
+		
+		assertNull(parser.parseExpressionNode());
+	}
 }

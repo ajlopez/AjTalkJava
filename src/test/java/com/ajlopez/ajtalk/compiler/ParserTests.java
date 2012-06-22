@@ -198,7 +198,7 @@ public class ParserTests {
 	}
 
 	@Test
-	public void simpleLiteralArray() throws ParserException, IOException, LexerException {
+	public void literalArray() throws ParserException, IOException, LexerException {
 		Parser parser = new Parser("#(1 'Hello' #symbol $x)");
 		
 		Node node = parser.parseExpressionNode();
@@ -210,6 +210,23 @@ public class ParserTests {
 		
 		assertNotNull(lanode.getElements());
 		assertEquals(4, lanode.getElements().length);
+		
+		assertNull(parser.parseExpressionNode());
+	}
+
+	@Test
+	public void expressionArray() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("{1+2. foo value. 'Hello' size. foo bar: 2}");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof ExpressionArrayNode);
+		
+		ExpressionArrayNode lanode = (ExpressionArrayNode)node;
+		
+		assertNotNull(lanode.getExpressions());
+		assertEquals(4, lanode.getExpressions().length);
 		
 		assertNull(parser.parseExpressionNode());
 	}

@@ -144,7 +144,22 @@ public class Parser {
 			return new LiteralArrayNode(elements);
 		}
 		
+		if (token.getType() == TokenType.SEPARATOR && token.getValue().equals("{")) {
+			Node[] expressions = this.parseExpressionArray();
+			this.parseToken("}", TokenType.SEPARATOR);
+			return new ExpressionArrayNode(expressions);
+		}
+		
 		throw new ParserException("Unexpected '" + token.getValue() + "'");
+	}
+	
+	private Node[] parseExpressionArray() throws ParserException, IOException, LexerException {
+		Node node = this.parseExpressionNode();
+		
+		if (node instanceof CompositeExpressionNode)
+			return ((CompositeExpressionNode)node).getExpressions();
+		
+		return new Node[] { node };
 	}
 	
 	private Node[] parseLiteralArrayElements() throws IOException, LexerException, ParserException

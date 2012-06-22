@@ -69,6 +69,7 @@ public class Lexer {
 	private Token nextSymbol() throws IOException {
 		StringBuilder builder = new StringBuilder();
 		int ich = this.reader.read();
+		int nchars = 0;
 		
 		while (ich != -1) {
 			char ch = (char)ich;
@@ -76,10 +77,15 @@ public class Lexer {
 			if (Character.isSpaceChar(ch))
 				break;
 			
+			// Case #(
+			if (ch == '(' && nchars == 0)
+				return new Token("#(", TokenType.SEPARATOR);
+			
 			if (separators.indexOf(ch)>=0)
 				break;
 			
 			builder.append(ch);
+			nchars++;
 			ich = this.reader.read();
 		}
 		

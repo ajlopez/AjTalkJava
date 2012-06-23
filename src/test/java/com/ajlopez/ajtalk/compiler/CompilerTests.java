@@ -91,6 +91,15 @@ public class CompilerTests {
 		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETGLOBAL, 0, Bytecodes.GETGLOBAL, 1, Bytecodes.GETVALUE, 2, Bytecodes.SEND, 3, 2}, new Object[] { "foo", "bar", 1, "do:with:" });
 	}
 	
+	@Test
+	public void compileCompositeExpression() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("1. 2. ^3");
+		Compiler compiler = new Compiler(parser.parseExpressionNode());
+		
+		Block block = compiler.compileBlock();
+		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0, Bytecodes.CLEAR, Bytecodes.GETVALUE, 1, Bytecodes.CLEAR, Bytecodes.GETVALUE, 2, Bytecodes.RETURN}, new Object[] { 1, 2, 3 });
+	}
+	
 	private void testBlock(Block block, int arity, int nlocals, byte[] bytecodes, Object[] values) {
 		assertNotNull(block);
 		assertEquals(arity, block.getArity());

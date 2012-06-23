@@ -66,6 +66,21 @@ public class Compiler {
 			this.compileNode((KeywordMessageNode)node);
 			return;
 		}
+
+		if (node instanceof CompositeExpressionNode) {
+			this.compileNode((CompositeExpressionNode)node);
+			return;
+		}
+	}
+	
+	private void compileNode(CompositeExpressionNode node) {
+		int nexpr = 0;
+		for (Node expression : node.getExpressions()) {
+			if (nexpr > 0)
+				this.compileBytecode((byte) Bytecodes.CLEAR);
+			nexpr++;
+			this.compileNode(expression);
+		}
 	}
 	
 	private void compileNode(ReturnNode node) {

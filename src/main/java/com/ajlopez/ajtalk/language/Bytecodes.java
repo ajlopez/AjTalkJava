@@ -12,4 +12,6 @@ public class Bytecodes {
 	public static final int SETVARIABLE = 10;
 	
 	public static final int ADD = 20;
+	
+	public static final int SEND = 30;
 }

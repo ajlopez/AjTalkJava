@@ -37,6 +37,15 @@ public class CompilerTests {
 		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0, Bytecodes.RETURN}, new Object[] { "foo" });
 	}
 	
+	@Test
+	public void compileUnaryMessage() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("1 inc");
+		Compiler compiler = new Compiler(parser.parseExpressionNode());
+		
+		Block block = compiler.compileBlock();
+		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0, Bytecodes.SEND, 1, 0}, new Object[] { 1, "inc" });
+	}
+	
 	private void testBlock(Block block, int arity, int nlocals, byte[] bytecodes, Object[] values) {
 		assertNotNull(block);
 		assertEquals(arity, block.getArity());

@@ -29,6 +29,15 @@ public class CompilerTests {
 	}
 
 	@Test
+	public void compileChar() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("$x");
+		Compiler compiler = new Compiler(parser.parseExpressionNode());
+		
+		Block block = compiler.compileBlock();
+		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0}, new Object[] { 'x' });
+	}
+
+	@Test
 	public void compileGlobalId() throws ParserException, IOException, LexerException {
 		Parser parser = new Parser("Smalltalk");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());

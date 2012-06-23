@@ -32,6 +32,11 @@ public class Compiler {
 			return;
 		}
 
+		if (node instanceof CharacterNode) {
+			this.compileNode((CharacterNode)node);
+			return;
+		}
+
 		if (node instanceof IdNode) {
 			this.compileNode((IdNode)node);
 			return;
@@ -96,6 +101,13 @@ public class Compiler {
 		return;
 	}
 	
+	private void compileNode(CharacterNode node) {
+		char value = node.getValue();
+		this.compileBytecode((byte)Bytecodes.GETVALUE);
+		this.compileValue(value);
+		return;
+	}
+	
 	private void compileNode(IntegerNode node) {
 		int value = node.getValue();
 		this.compileBytecode((byte)Bytecodes.GETVALUE);
@@ -127,6 +139,17 @@ public class Compiler {
 	}
 	
 	private void compileValue(int value) {
+		int position = this.values.indexOf(value);
+		
+		if (position < 0) {
+			this.values.add(value);
+			position = this.values.size() - 1;
+		}
+		
+		this.compileBytecode((byte)position);
+	}
+	
+	private void compileValue(char value) {
 		int position = this.values.indexOf(value);
 		
 		if (position < 0) {

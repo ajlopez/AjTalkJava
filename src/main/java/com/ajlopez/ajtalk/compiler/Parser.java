@@ -152,6 +152,8 @@ public class Parser {
 			return new IntegerNode(Integer.parseInt(token.getValue()));
 		case STRING:
 			return new StringNode(token.getValue());
+		case SYMBOL:
+			return new SymbolNode(token.getValue());
 		case CHARACTER:
 			return new CharacterNode(token.getValue().charAt(0));
 		case ID:

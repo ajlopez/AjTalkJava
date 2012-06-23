@@ -32,6 +32,11 @@ public class Compiler {
 			return;
 		}
 
+		if (node instanceof SymbolNode) {
+			this.compileNode((SymbolNode)node);
+			return;
+		}
+
 		if (node instanceof CharacterNode) {
 			this.compileNode((CharacterNode)node);
 			return;
@@ -116,6 +121,13 @@ public class Compiler {
 	}
 	
 	private void compileNode(StringNode node) {
+		String value = node.getValue();
+		this.compileBytecode((byte) Bytecodes.GETVALUE);
+		this.compileValue(value);
+		return;
+	}
+	
+	private void compileNode(SymbolNode node) {
 		String value = node.getValue();
 		this.compileBytecode((byte) Bytecodes.GETVALUE);
 		this.compileValue(value);

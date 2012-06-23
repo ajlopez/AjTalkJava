@@ -9,13 +9,59 @@ import org.junit.Test;
 import com.ajlopez.ajtalk.compiler.ast.Node;
 
 public class ChunkReaderTests {
-
 	@Test
-	public void getChunk() throws IOException, ParserException, LexerException {
+	public void readChunk() throws IOException, ParserException, LexerException {
 		ChunkReader reader = new ChunkReader(this.resourceAsReader("FileOut01.st"));
 		String chunk = reader.readChunk();
 		assertNotNull(chunk);
 		assertEquals('\'', chunk.charAt(0));
+	}
+
+	@Test
+	public void readChunkWithInitialBang() throws IOException, ParserException, LexerException {
+		ChunkReader reader = new ChunkReader("!\"Comment\"");
+		String chunk = reader.readChunk();
+		assertNotNull(chunk);
+		assertEquals('!', chunk.charAt(0));
+	}
+
+	@Test
+	public void readSecondChunkWithInitialBang() throws IOException, ParserException, LexerException {
+		ChunkReader reader = new ChunkReader("\"A comment\"!\r\n!\"Comment\"");
+		String chunk = reader.readChunk();
+		assertNotNull(chunk);
+		chunk = reader.readChunk();
+		assertNotNull(chunk);
+		assertEquals('!', chunk.charAt(0));
+	}
+
+	@Test
+	public void readChunks() throws IOException, ParserException, LexerException {
+		ChunkReader reader = new ChunkReader(this.resourceAsReader("FileOut01.st"));
+		
+		String chunk = reader.readChunk();
+		assertNotNull(chunk);
+
+		chunk = reader.readChunk();
+		assertNotNull(chunk);
+
+		chunk = reader.readChunk();
+		assertNotNull(chunk);
+		assertEquals('!', chunk.charAt(0));
+
+		chunk = reader.readChunk();
+		assertNotNull(chunk);
+
+		chunk = reader.readChunk();
+		assertNotNull(chunk);
+		assertEquals('!', chunk.charAt(0));
+
+		chunk = reader.readChunk();
+		assertNotNull(chunk);
+
+		chunk = reader.readChunk();
+		assertNotNull(chunk);
+		assertEquals(' ', chunk.charAt(0));
 	}
 	
 	private Reader resourceAsReader(String name) throws IOException, ParserException, LexerException {

@@ -46,6 +46,15 @@ public class CompilerTests {
 		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0, Bytecodes.SEND, 1, 0}, new Object[] { 1, "inc" });
 	}
 	
+	@Test
+	public void compileBinaryMessage() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("1+2");
+		Compiler compiler = new Compiler(parser.parseExpressionNode());
+		
+		Block block = compiler.compileBlock();
+		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0, Bytecodes.GETVALUE, 1, Bytecodes.SEND, 2, 1}, new Object[] { 1, 2, "+" });
+	}
+	
 	private void testBlock(Block block, int arity, int nlocals, byte[] bytecodes, Object[] values) {
 		assertNotNull(block);
 		assertEquals(arity, block.getArity());

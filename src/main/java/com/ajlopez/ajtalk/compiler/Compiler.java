@@ -41,6 +41,11 @@ public class Compiler {
 			this.compileNode((UnaryMessageNode)node);
 			return;
 		}
+
+		if (node instanceof BinaryMessageNode) {
+			this.compileNode((BinaryMessageNode)node);
+			return;
+		}
 	}
 	
 	private void compileNode(ReturnNode node) {
@@ -53,6 +58,15 @@ public class Compiler {
 		this.compileBytecode((byte)Bytecodes.SEND);
 		this.compileValue(node.getSelector());
 		this.compileBytecode((byte)0);
+		return;
+	}
+	
+	private void compileNode(BinaryMessageNode node) {
+		this.compileNode(node.getTarget());
+		this.compileNode(node.getArgument());
+		this.compileBytecode((byte)Bytecodes.SEND);
+		this.compileValue(node.getSelector());
+		this.compileBytecode((byte)1);
 		return;
 	}
 	

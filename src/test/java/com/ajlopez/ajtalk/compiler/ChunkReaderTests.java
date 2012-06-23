@@ -26,6 +26,14 @@ public class ChunkReaderTests {
 	}
 
 	@Test
+	public void readChunkWithInnerBang() throws IOException, ParserException, LexerException {
+		ChunkReader reader = new ChunkReader("This is a !! bang!");
+		String chunk = reader.readChunk();
+		assertNotNull(chunk);
+		assertEquals("This is a ! bang", chunk);
+	}
+
+	@Test
 	public void readSecondChunkWithInitialBang() throws IOException, ParserException, LexerException {
 		ChunkReader reader = new ChunkReader("\"A comment\"!\r\n!\"Comment\"");
 		String chunk = reader.readChunk();

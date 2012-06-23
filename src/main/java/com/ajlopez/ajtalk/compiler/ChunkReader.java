@@ -5,6 +5,7 @@ import java.io.*;
 public class ChunkReader {
 	private static final char ChunkDelimeter = '!';
 	private Reader reader;
+	private int lastchar = -1;
 	
 	public ChunkReader(String text) {
 		this(new StringReader(text));
@@ -19,11 +20,17 @@ public class ChunkReader {
 		int ich;
 		int lastich = -1;
 		
-		for (ich = this.reader.read(); ich != -1; ich = this.reader.read()) {
+		for (ich = this.nextChar(); ich != -1; ich = this.nextChar()) {
 			char ch = (char)ich;
 			
-			if (ch == ChunkDelimeter && lastich != -1)
-				break;
+			if (ch == ChunkDelimeter && lastich != -1) {
+				ich = this.nextChar();
+				
+				if (ich == -1 || (char) ich != ChunkDelimeter) {
+					this.pushChar(ich);
+					break;
+				}
+			}
 			
 			if (lastich == -1 && (ch == '\r' || ch == '\n'))
 				continue;
@@ -41,4 +48,18 @@ public class ChunkReader {
 		
 		return result;
 	}
+	
+	private int nextChar() throws IOException {
+		if (this.lastchar != -1) {
+			int next = this.lastchar;
+			this.lastchar = -1;
+			return next;
+		}
+		
+		return this.reader.read();
+	}
+	
+	private void pushChar(int ich) {
+		this.lastchar = ich;
+	}	
 }

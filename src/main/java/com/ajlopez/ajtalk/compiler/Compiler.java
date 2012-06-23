@@ -31,11 +31,21 @@ public class Compiler {
 			this.compileNode((StringNode)node);
 			return;
 		}
+
+		if (node instanceof ReturnNode) {
+			this.compileNode((ReturnNode)node);
+			return;
+		}
+	}
+	
+	private void compileNode(ReturnNode node) {
+		this.compileNode(node.getExpression());
+		this.compileBytecode((byte)Bytecodes.RETURN);
 	}
 	
 	private void compileNode(IntegerNode node) {
 		int value = node.getValue();
-		this.compileBytecode((byte) Bytecodes.GETVALUE);
+		this.compileBytecode((byte)Bytecodes.GETVALUE);
 		this.compileValue(value);
 		return;
 	}

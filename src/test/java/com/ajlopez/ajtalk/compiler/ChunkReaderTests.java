@@ -6,8 +6,6 @@ import java.io.*;
 
 import org.junit.Test;
 
-import com.ajlopez.ajtalk.compiler.ast.Node;
-
 public class ChunkReaderTests {
 	@Test
 	public void readChunk() throws IOException, ParserException, LexerException {

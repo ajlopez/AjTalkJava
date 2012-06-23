@@ -34,6 +34,14 @@ public class ExecutionBlockTests {
 	}
 
 	@Test
+	public void executeGetValue() {
+		byte[] bytecodes = new byte[] { Bytecodes.GETVALUE, 0, Bytecodes.RETURN };
+		Object[] values = new Object[] { 1 };
+		Block block = new Block(1, 1, bytecodes, values );
+		assertEquals(1, block.execute(null));
+	}
+
+	@Test
 	public void executeSetVariable() {
 		BaseClass behavior = new BaseClass(null, new String[] { "x", "y"} );
 		BaseObject object = new BaseObject(behavior);

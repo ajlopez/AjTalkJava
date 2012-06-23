@@ -29,6 +29,10 @@ public class ExecutionBlock {
 				ip++;
 				stack[position++] = this.locals[this.block.bytecodes[ip]];
 				break;
+			case Bytecodes.GETVALUE:
+				ip++;
+				stack[position++] = this.block.values[this.block.bytecodes[ip]];
+				break;
 			case Bytecodes.SETLOCAL:
 				ip++;
 				this.locals[this.block.bytecodes[ip]] = stack[--position];

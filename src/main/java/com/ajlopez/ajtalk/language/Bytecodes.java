@@ -8,6 +8,7 @@ public class Bytecodes {
 	public static final int SETLOCAL = 3;
 	public static final int GETVALUE = 4;	
 	public static final int GETVARIABLE = 5;
+	public static final int GETGLOBAL = 6;
 	
 	public static final int SETVARIABLE = 10;
 	

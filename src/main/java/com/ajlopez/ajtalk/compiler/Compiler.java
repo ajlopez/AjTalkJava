@@ -32,6 +32,11 @@ public class Compiler {
 			return;
 		}
 
+		if (node instanceof IdNode) {
+			this.compileNode((IdNode)node);
+			return;
+		}
+
 		if (node instanceof ReturnNode) {
 			this.compileNode((ReturnNode)node);
 			return;
@@ -51,6 +56,12 @@ public class Compiler {
 	private void compileNode(ReturnNode node) {
 		this.compileNode(node.getExpression());
 		this.compileBytecode((byte)Bytecodes.RETURN);
+	}
+	
+	private void compileNode(IdNode node) {
+		this.compileBytecode((byte)Bytecodes.GETGLOBAL);
+		this.compileValue(node.getName());
+		return;
 	}
 	
 	private void compileNode(UnaryMessageNode node) {

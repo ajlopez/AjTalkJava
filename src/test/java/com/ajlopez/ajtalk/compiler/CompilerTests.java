@@ -27,6 +27,15 @@ public class CompilerTests {
 		Block block = compiler.compileBlock();
 		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0}, new Object[] { "foo" });
 	}
+
+	@Test
+	public void compileGlobalId() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("Smalltalk");
+		Compiler compiler = new Compiler(parser.parseExpressionNode());
+		
+		Block block = compiler.compileBlock();
+		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETGLOBAL, 0}, new Object[] { "Smalltalk" });
+	}
 	
 	@Test
 	public void compileReturnString() throws ParserException, IOException, LexerException {

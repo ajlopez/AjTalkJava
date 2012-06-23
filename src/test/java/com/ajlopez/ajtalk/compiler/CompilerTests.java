@@ -64,6 +64,15 @@ public class CompilerTests {
 		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0, Bytecodes.GETVALUE, 1, Bytecodes.SEND, 2, 1}, new Object[] { 1, 2, "+" });
 	}
 	
+	@Test
+	public void compileKeywordMessage() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("foo do: bar with: 1");
+		Compiler compiler = new Compiler(parser.parseExpressionNode());
+		
+		Block block = compiler.compileBlock();
+		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETGLOBAL, 0, Bytecodes.GETGLOBAL, 1, Bytecodes.GETVALUE, 2, Bytecodes.SEND, 3, 2}, new Object[] { "foo", "bar", 1, "do:with:" });
+	}
+	
 	private void testBlock(Block block, int arity, int nlocals, byte[] bytecodes, Object[] values) {
 		assertNotNull(block);
 		assertEquals(arity, block.getArity());

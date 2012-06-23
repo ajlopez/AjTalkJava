@@ -3,8 +3,7 @@ package com.ajlopez.ajtalk.compiler;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ajlopez.ajtalk.compiler.ast.IntegerNode;
-import com.ajlopez.ajtalk.compiler.ast.Node;
+import com.ajlopez.ajtalk.compiler.ast.*;
 import com.ajlopez.ajtalk.language.Block;
 import com.ajlopez.ajtalk.language.Bytecodes;
 
@@ -21,6 +20,14 @@ public class Compiler {
 		if (this.node instanceof IntegerNode) {
 			IntegerNode inode = (IntegerNode)this.node;
 			int value = inode.getValue();
+			this.compileBytecode((byte) Bytecodes.GETVALUE);
+			this.compileValue(value);
+			return makeBlock();
+		}
+
+		if (this.node instanceof StringNode) {
+			StringNode snode = (StringNode)this.node;
+			String value = snode.getValue();
 			this.compileBytecode((byte) Bytecodes.GETVALUE);
 			this.compileValue(value);
 			return makeBlock();
@@ -46,6 +53,17 @@ public class Compiler {
 	}
 	
 	private void compileValue(int value) {
+		int position = this.values.indexOf(value);
+		
+		if (position < 0) {
+			this.values.add(value);
+			position = this.values.size() - 1;
+		}
+		
+		this.compileBytecode((byte)position);
+	}
+	
+	private void compileValue(Object value) {
 		int position = this.values.indexOf(value);
 		
 		if (position < 0) {

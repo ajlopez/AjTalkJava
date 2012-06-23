@@ -34,4 +34,29 @@ public class CompilerTests {
 		assertEquals(1, values.length);
 		assertEquals(123, values[0]);
 	}
+
+	@Test
+	public void compileStringNode() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("'foo'");
+		Compiler compiler = new Compiler(parser.parseExpressionNode());
+		
+		Block block = compiler.compileBlock();
+		
+		assertNotNull(block);
+		assertEquals(0, block.getArity());
+		assertEquals(0, block.getNoLocals());
+		
+		byte[] bytecodes = block.getBytecodes();
+		
+		assertNotNull(bytecodes);
+		assertEquals(2, bytecodes.length);
+		assertEquals(Bytecodes.GETVALUE, bytecodes[0]);
+		assertEquals(0, bytecodes[1]);
+		
+		Object[] values = block.getValues();
+		
+		assertNotNull(values);
+		assertEquals(1, values.length);
+		assertEquals("foo", values[0]);
+	}
 }

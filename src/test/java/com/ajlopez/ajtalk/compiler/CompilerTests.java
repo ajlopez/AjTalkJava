@@ -16,23 +16,7 @@ public class CompilerTests {
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		
 		Block block = compiler.compileBlock();
-		
-		assertNotNull(block);
-		assertEquals(0, block.getArity());
-		assertEquals(0, block.getNoLocals());
-		
-		byte[] bytecodes = block.getBytecodes();
-		
-		assertNotNull(bytecodes);
-		assertEquals(2, bytecodes.length);
-		assertEquals(Bytecodes.GETVALUE, bytecodes[0]);
-		assertEquals(0, bytecodes[1]);
-		
-		Object[] values = block.getValues();
-		
-		assertNotNull(values);
-		assertEquals(1, values.length);
-		assertEquals(123, values[0]);
+		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0}, new Object[] { 123 });
 	}
 
 	@Test
@@ -41,22 +25,14 @@ public class CompilerTests {
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		
 		Block block = compiler.compileBlock();
-		
+		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0}, new Object[] { "foo" });
+	}
+	
+	private void testBlock(Block block, int arity, int nlocals, byte[] bytecodes, Object[] values) {
 		assertNotNull(block);
-		assertEquals(0, block.getArity());
-		assertEquals(0, block.getNoLocals());
-		
-		byte[] bytecodes = block.getBytecodes();
-		
-		assertNotNull(bytecodes);
-		assertEquals(2, bytecodes.length);
-		assertEquals(Bytecodes.GETVALUE, bytecodes[0]);
-		assertEquals(0, bytecodes[1]);
-		
-		Object[] values = block.getValues();
-		
-		assertNotNull(values);
-		assertEquals(1, values.length);
-		assertEquals("foo", values[0]);
+		assertEquals(arity, block.getArity());
+		assertEquals(nlocals, block.getNoLocals());
+		assertArrayEquals(bytecodes, block.getBytecodes());
+		assertArrayEquals(values, block.getValues());
 	}
 }

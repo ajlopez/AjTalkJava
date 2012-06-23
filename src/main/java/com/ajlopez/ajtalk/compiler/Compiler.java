@@ -16,24 +16,35 @@ public class Compiler {
 		this.node = node;
 	}
 	
-	public Block compileBlock() {		
-		if (this.node instanceof IntegerNode) {
-			IntegerNode inode = (IntegerNode)this.node;
-			int value = inode.getValue();
-			this.compileBytecode((byte) Bytecodes.GETVALUE);
-			this.compileValue(value);
-			return makeBlock();
+	public Block compileBlock() {
+		this.compileNode(this.node);
+		return makeBlock();
+	}
+	
+	private void compileNode(Node node) {
+		if (node instanceof IntegerNode) {
+			this.compileNode((IntegerNode)node);
+			return;
 		}
 
-		if (this.node instanceof StringNode) {
-			StringNode snode = (StringNode)this.node;
-			String value = snode.getValue();
-			this.compileBytecode((byte) Bytecodes.GETVALUE);
-			this.compileValue(value);
-			return makeBlock();
+		if (node instanceof StringNode) {
+			this.compileNode((StringNode)node);
+			return;
 		}
-		
-		return null;
+	}
+	
+	private void compileNode(IntegerNode node) {
+		int value = node.getValue();
+		this.compileBytecode((byte) Bytecodes.GETVALUE);
+		this.compileValue(value);
+		return;
+	}
+	
+	private void compileNode(StringNode node) {
+		String value = node.getValue();
+		this.compileBytecode((byte) Bytecodes.GETVALUE);
+		this.compileValue(value);
+		return;
 	}
 	
 	private Block makeBlock()

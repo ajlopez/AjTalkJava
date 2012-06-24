@@ -15,6 +15,7 @@ public class ExecutionBlock {
 	}
 	
 	public Object execute(Object self, Object[] arguments, Machine machine) throws ExecutionException {
+		// TODO set variable stack
 		Object[] stack = new Object[10];
 		int position = 0;
 		int ip = 0;

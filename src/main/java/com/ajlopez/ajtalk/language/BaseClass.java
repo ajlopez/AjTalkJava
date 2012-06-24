@@ -5,16 +5,23 @@ import java.util.Map;
 
 public class BaseClass extends BaseObject implements IClass {
 	private String[] instanceVariableNames;
+	private IBehavior superclass;
 	private Map<String, IMethod> methods = new HashMap<String, IMethod>();
 	
-	public BaseClass(IBehavior klass) {
-		this(klass, null);
+	public BaseClass(IBehavior superklass) {
+		this(superklass, null);
 	}
 	
-	public BaseClass(IBehavior klass, String[] instanceVariableNames)
+	public BaseClass(IBehavior superklass, String[] instanceVariableNames)
 	{
-		super(klass);
+		super(null);
+		this.superclass = superklass;
 		this.instanceVariableNames = instanceVariableNames;
+	}
+	
+	@Override
+	public IBehavior getSuperBehavior() {
+		return this.superclass;
 	}
 
 	@Override
@@ -57,13 +64,13 @@ public class BaseClass extends BaseObject implements IClass {
 	}
 	
 	private int getBaseObjectSize() {
-		IBehavior behavior = this.getBehavior();
+		IBehavior behavior = this.superclass;
 		
 		return (behavior instanceof IClass ? ((IClass)behavior).getObjectSize() : 0);
 	}
 	
 	private int getBaseVariableOffset(String name) {
-		IBehavior behavior = this.getBehavior();
+		IBehavior behavior = this.superclass;
 		
 		return (behavior instanceof IClass ? ((IClass)behavior).getVariableOffset(name) : -1);
 	}

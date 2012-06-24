@@ -1,7 +1,9 @@
 package com.ajlopez.ajtalk;
 
+import java.io.IOException;
 import java.util.*;
 
+import com.ajlopez.ajtalk.compiler.ChunkReader;
 import com.ajlopez.ajtalk.language.*;
 
 public class Machine {
@@ -16,6 +18,10 @@ public class Machine {
 		metaclass.defineMethod("subclass:instanceVariableNames:", subclass);
 		metaclass.defineMethod("subclass:instanceVariableNames:classVariableNames:", subclass);
 		metaclass.defineMethod("subclass:instanceVariableNames:classVariableNames:poolDictionaries:category:", subclass);
+		
+		IMethod comment = new ClassCommentMethod();
+		metaclass.defineMethod("commentStamp:", comment);
+		metaclass.defineMethod("commentStamp:prior:", comment);
 		
 		IClass classProtoObject = new BaseClass(metaclass, null);
 		this.setValue("ProtoObject", classProtoObject);
@@ -47,4 +53,32 @@ class ClassSubclassMethod implements IMethod {
 		machine.setValue((String)arguments[0], result);
 		return result;
 	}	
+}
+
+class ClassCommentMethod implements IMethod {
+
+	@Override
+	public Object execute(Object self, Object[] arguments, Machine machine) throws ExecutionException {
+		return new CommentProcessor(null);
+	}	
+}
+
+class CommentProcessor extends BaseObject {
+	public CommentProcessor(IBehavior behavior) {
+		super(behavior);
+	}	
+	
+	@Override
+	public Object send(String selector, Object[]arguments, Machine machine) throws ExecutionException {
+		if (!selector.equals("process:"))
+			throw new ExecutionException("Invalid Method");
+		
+		ChunkReader reader = (ChunkReader)arguments[0];
+		try {
+			reader.readChunk();
+		} catch (IOException e) {
+			throw new ExecutionException(e);
+		}
+		return null;
+	}
 }

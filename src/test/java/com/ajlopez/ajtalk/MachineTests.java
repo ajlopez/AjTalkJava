@@ -80,4 +80,28 @@ public class MachineTests {
 		assertEquals(0, klass.getVariableOffset("x"));
 		assertEquals(1, klass.getVariableOffset("y"));
 	}
+
+	@Test
+	public void initializeProtoObjectCommentStamp() throws ExecutionException {
+		Machine machine = new Machine();
+		machine.initialize();
+		
+		IObject protoObject = (IObject)machine.getValue("ProtoObject");
+		Object result = protoObject.send("commentStamp:", new Object[] { "comment" }, machine);
+		
+		assertNotNull(result);
+		assertTrue(result instanceof IObject);
+	}
+
+	@Test
+	public void initializeProtoObjectCommentStampPrior() throws ExecutionException {
+		Machine machine = new Machine();
+		machine.initialize();
+		
+		IObject protoObject = (IObject)machine.getValue("ProtoObject");
+		Object result = protoObject.send("commentStamp:prior:", new Object[] { "comment", 0 }, machine);
+		
+		assertNotNull(result);
+		assertTrue(result instanceof IObject);
+	}
 }

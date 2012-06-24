@@ -16,12 +16,12 @@ public class Compiler {
 		this.node = node;
 	}
 	
-	public Block compileBlock() {
+	public Block compileBlock() throws CompilerException {
 		this.compileNode(this.node);
 		return makeBlock();
 	}
 	
-	private void compileNode(Node node) {
+	private void compileNode(Node node) throws CompilerException {
 		if (node instanceof IntegerNode) {
 			this.compileNode((IntegerNode)node);
 			return;
@@ -71,9 +71,11 @@ public class Compiler {
 			this.compileNode((CompositeExpressionNode)node);
 			return;
 		}
+		
+		throw new CompilerException("Unexpected Node");
 	}
 	
-	private void compileNode(CompositeExpressionNode node) {
+	private void compileNode(CompositeExpressionNode node) throws CompilerException {
 		int nexpr = 0;
 		for (Node expression : node.getExpressions()) {
 			if (nexpr > 0)
@@ -83,7 +85,7 @@ public class Compiler {
 		}
 	}
 	
-	private void compileNode(ReturnNode node) {
+	private void compileNode(ReturnNode node) throws CompilerException {
 		this.compileNode(node.getExpression());
 		this.compileBytecode((byte)Bytecodes.RETURN);
 	}
@@ -94,7 +96,7 @@ public class Compiler {
 		return;
 	}
 	
-	private void compileNode(UnaryMessageNode node) {
+	private void compileNode(UnaryMessageNode node) throws CompilerException {
 		this.compileNode(node.getTarget());
 		this.compileBytecode((byte)Bytecodes.SEND);
 		this.compileValue(node.getSelector());
@@ -102,7 +104,7 @@ public class Compiler {
 		return;
 	}
 	
-	private void compileNode(BinaryMessageNode node) {
+	private void compileNode(BinaryMessageNode node) throws CompilerException {
 		this.compileNode(node.getTarget());
 		this.compileNode(node.getArgument());
 		this.compileBytecode((byte)Bytecodes.SEND);
@@ -111,7 +113,7 @@ public class Compiler {
 		return;
 	}
 	
-	private void compileNode(KeywordMessageNode node) {
+	private void compileNode(KeywordMessageNode node) throws CompilerException {
 		this.compileNode(node.getTarget());
 		for (Node argument: node.getArguments())
 			this.compileNode(argument);

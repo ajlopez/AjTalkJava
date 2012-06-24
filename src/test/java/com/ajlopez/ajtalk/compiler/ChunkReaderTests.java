@@ -9,9 +9,7 @@ import org.junit.Test;
 import com.ajlopez.ajtalk.ExecutionException;
 import com.ajlopez.ajtalk.Machine;
 import com.ajlopez.ajtalk.compiler.ast.Node;
-import com.ajlopez.ajtalk.language.IBehavior;
-import com.ajlopez.ajtalk.language.IBlock;
-import com.ajlopez.ajtalk.language.IClass;
+import com.ajlopez.ajtalk.language.*;
 
 public class ChunkReaderTests {
 	@Test
@@ -78,7 +76,7 @@ public class ChunkReaderTests {
 	}
 
 	@Test
-	public void executeFirstChunk() throws IOException, ParserException, LexerException, ExecutionException {
+	public void executeFirstChunk() throws IOException, ParserException, LexerException, ExecutionException, CompilerException {
 		ChunkReader reader = new ChunkReader(this.resourceAsReader("Point.st"));
 		
 		Machine machine = new Machine();
@@ -92,7 +90,7 @@ public class ChunkReaderTests {
 	}
 
 	@Test
-	public void executeFirstAndSecondChunk() throws IOException, ParserException, LexerException, ExecutionException {
+	public void executeFirstAndSecondChunk() throws IOException, ParserException, LexerException, ExecutionException, CompilerException {
 		ChunkReader reader = new ChunkReader(this.resourceAsReader("Point.st"));
 		
 		Machine machine = new Machine();

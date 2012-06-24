@@ -11,7 +11,7 @@ import com.ajlopez.ajtalk.language.Bytecodes;
 
 public class CompilerTests {
 	@Test
-	public void compileInteger() throws ParserException, IOException, LexerException {
+	public void compileInteger() throws ParserException, IOException, LexerException, CompilerException {
 		Parser parser = new Parser("123");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		
@@ -20,7 +20,7 @@ public class CompilerTests {
 	}
 
 	@Test
-	public void compileString() throws ParserException, IOException, LexerException {
+	public void compileString() throws ParserException, IOException, LexerException, CompilerException {
 		Parser parser = new Parser("'foo'");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		
@@ -29,7 +29,7 @@ public class CompilerTests {
 	}
 
 	@Test
-	public void compileSymbol() throws ParserException, IOException, LexerException {
+	public void compileSymbol() throws ParserException, IOException, LexerException, CompilerException {
 		Parser parser = new Parser("#foo");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		
@@ -38,7 +38,7 @@ public class CompilerTests {
 	}
 
 	@Test
-	public void compileChar() throws ParserException, IOException, LexerException {
+	public void compileChar() throws ParserException, IOException, LexerException, CompilerException {
 		Parser parser = new Parser("$x");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		
@@ -47,7 +47,7 @@ public class CompilerTests {
 	}
 
 	@Test
-	public void compileGlobalId() throws ParserException, IOException, LexerException {
+	public void compileGlobalId() throws ParserException, IOException, LexerException, CompilerException {
 		Parser parser = new Parser("Smalltalk");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		
@@ -56,7 +56,7 @@ public class CompilerTests {
 	}
 	
 	@Test
-	public void compileReturnString() throws ParserException, IOException, LexerException {
+	public void compileReturnString() throws ParserException, IOException, LexerException, CompilerException {
 		Parser parser = new Parser("^'foo'");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		
@@ -65,7 +65,7 @@ public class CompilerTests {
 	}
 	
 	@Test
-	public void compileUnaryMessage() throws ParserException, IOException, LexerException {
+	public void compileUnaryMessage() throws ParserException, IOException, LexerException, CompilerException {
 		Parser parser = new Parser("1 inc");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		
@@ -74,7 +74,7 @@ public class CompilerTests {
 	}
 	
 	@Test
-	public void compileBinaryMessage() throws ParserException, IOException, LexerException {
+	public void compileBinaryMessage() throws ParserException, IOException, LexerException, CompilerException {
 		Parser parser = new Parser("1+2");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		
@@ -83,7 +83,7 @@ public class CompilerTests {
 	}
 	
 	@Test
-	public void compileKeywordMessage() throws ParserException, IOException, LexerException {
+	public void compileKeywordMessage() throws ParserException, IOException, LexerException, CompilerException {
 		Parser parser = new Parser("foo do: bar with: 1");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		
@@ -92,7 +92,7 @@ public class CompilerTests {
 	}
 	
 	@Test
-	public void compileCompositeExpression() throws ParserException, IOException, LexerException {
+	public void compileCompositeExpression() throws ParserException, IOException, LexerException, CompilerException {
 		Parser parser = new Parser("1. 2. ^3");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());
 		

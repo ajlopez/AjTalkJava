@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.ajlopez.ajtalk.ExecutionException;
 import com.ajlopez.ajtalk.Machine;
 
 public class BaseClassTests {
@@ -53,11 +54,20 @@ public class BaseClassTests {
 		assertEquals(klass, object.getBehavior());
 	}
 
+	@Test
+	public void invokeInstanceMethod() throws ExecutionException {
+		BaseClass klass = new BaseClass(null, new String[] { "x", "y" });
+		IMethod method = new MyMethod();
+		klass.defineMethod("mymethod", method);
+		IObject object = klass.createInstance();
+		
+		assertEquals(1, object.send("mymethod", new Object[] { 1 }, null));
+	}
+
 	private class MyMethod implements IMethod {
 		@Override
 		public Object execute(Object self, Object[] arguments, Machine machine) {
-			// TODO Auto-generated method stub
-			return null;
+			return arguments[0];
 		}	
 	}
 }

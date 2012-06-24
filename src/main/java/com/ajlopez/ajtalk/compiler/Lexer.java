@@ -89,7 +89,7 @@ public class Lexer {
 		while (ich != -1) {
 			char ch = (char)ich;
 			
-			if (Character.isSpaceChar(ch))
+			if (Character.isSpaceChar(ch) || Character.isISOControl(ch))
 				break;
 			
 			// Case #(

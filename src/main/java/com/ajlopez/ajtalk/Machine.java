@@ -15,6 +15,7 @@ public class Machine {
 		metaclass.defineMethod("subclass:", subclass);
 		metaclass.defineMethod("subclass:instanceVariableNames:", subclass);
 		metaclass.defineMethod("subclass:instanceVariableNames:classVariableNames:", subclass);
+		metaclass.defineMethod("subclass:instanceVariableNames:classVariableNames:poolDictionaries:category:", subclass);
 		
 		IClass classProtoObject = new BaseClass(metaclass, null);
 		this.setValue("ProtoObject", classProtoObject);

@@ -151,6 +151,29 @@ public class ParserTests {
 	}
 
 	@Test
+	public void keywordMessageNodeMultiline() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("x \r\n  foo: 1\r\n bar: 2");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof KeywordMessageNode);
+		assertEquals("foo:bar:", ((KeywordMessageNode)node).getSelector());
+		
+		KeywordMessageNode knode = (KeywordMessageNode)node;		
+		Node target = knode.getTarget();
+		
+		assertNotNull(target);
+		assertTrue(target instanceof IdNode);
+		assertEquals("x", ((IdNode)target).getName());
+		
+		assertNotNull(knode.getArguments());
+		assertEquals(2, knode.getArguments().length);
+		
+		assertNull(parser.parseExpressionNode());
+	}
+
+	@Test
 	public void idNodeInParentheses() throws ParserException, IOException, LexerException {
 		Parser parser = new Parser("(foo)");
 		

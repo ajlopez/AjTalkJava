@@ -81,6 +81,34 @@ public class LexerTests {
 	}
 
 	@Test
+	public void twoIdsMultiline() throws IOException, LexerException {
+		Lexer lexer = new Lexer("foo\r\nbar");
+		Token token = lexer.nextToken();
+		assertNotNull(token);
+		assertEquals(TokenType.ID, token.getType());
+		assertEquals("foo", token.getValue());
+		token = lexer.nextToken();
+		assertNotNull(token);
+		assertEquals(TokenType.ID, token.getType());
+		assertEquals("bar", token.getValue());
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
+	public void twoSymbolsMultiline() throws IOException, LexerException {
+		Lexer lexer = new Lexer("#foo\r\n#bar");
+		Token token = lexer.nextToken();
+		assertNotNull(token);
+		assertEquals(TokenType.SYMBOL, token.getType());
+		assertEquals("foo", token.getValue());
+		token = lexer.nextToken();
+		assertNotNull(token);
+		assertEquals(TokenType.SYMBOL, token.getType());
+		assertEquals("bar", token.getValue());
+		assertNull(lexer.nextToken());
+	}
+
+	@Test
 	public void simpleInteger() throws IOException, LexerException {
 		Lexer lexer = new Lexer("123");
 		Token token = lexer.nextToken();

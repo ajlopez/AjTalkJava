@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 
 import org.junit.Test;
 
+import com.ajlopez.ajtalk.compiler.ast.KeywordMessageNode;
 import com.ajlopez.ajtalk.compiler.ast.MethodNode;
 import com.ajlopez.ajtalk.compiler.ast.Node;
 
@@ -60,9 +61,25 @@ public class ParserFileTests {
 		assertEquals("aPoint", mnode.getArguments()[0]);
 	}
 	
+	@Test
+	public void parseBlockSubclassPoint() throws IOException, ParserException, LexerException {
+		Node node = this.parseExpressionFromResource("PointSubclass.st");
+		assertNotNull(node);
+		assertTrue(node instanceof KeywordMessageNode);
+		
+		KeywordMessageNode knode = (KeywordMessageNode)node;
+		assertEquals("subclass:instanceVariableNames:classVariableNames:poolDictionaries:category:", knode.getSelector());
+	}
+	
 	private Node parseMethodFromResource(String name) throws IOException, ParserException, LexerException {
 		Lexer lexer = new Lexer(new InputStreamReader(getClass().getResourceAsStream(name)));
 		Parser parser = new Parser(lexer);
 		return parser.parseMethodNode();
+	}
+	
+	private Node parseExpressionFromResource(String name) throws IOException, ParserException, LexerException {
+		Lexer lexer = new Lexer(new InputStreamReader(getClass().getResourceAsStream(name)));
+		Parser parser = new Parser(lexer);
+		return parser.parseExpressionNode();
 	}
 }

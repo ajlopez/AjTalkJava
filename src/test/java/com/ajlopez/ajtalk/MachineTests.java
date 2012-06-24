@@ -60,4 +60,24 @@ public class MachineTests {
 		
 		assertEquals(protoObject, klass.getSuperBehavior());
 	}
+
+	@Test
+	public void initializeProtoObjectSubclassWithInstanceVariables() throws ExecutionException {
+		Machine machine = new Machine();
+		machine.initialize();
+		
+		IObject protoObject = (IObject)machine.getValue("ProtoObject");
+		Object result = protoObject.send("subclass:instanceVariableNames:classVariableNames:", new Object[] { "Point", "x y", "" }, machine);
+		
+		assertNotNull(result);
+		assertTrue(result instanceof IClass);
+		assertEquals(machine.getValue("Point"), result);		
+		
+		IClass klass = (IClass)result;
+				
+		assertEquals(protoObject, klass.getSuperBehavior());
+		assertEquals(2, klass.getObjectSize());
+		assertEquals(0, klass.getVariableOffset("x"));
+		assertEquals(1, klass.getVariableOffset("y"));
+	}
 }

@@ -52,7 +52,7 @@ public class BaseClass extends BaseObject implements IClass {
 			return baseoffset;
 		
 		for (int k = 0; k < this.instanceVariableNames.length; k++)
-			if (this.instanceVariableNames[k] == name)
+			if (this.instanceVariableNames[k].equals(name))
 				return k + this.getBaseObjectSize();
 		
 		return -1;

@@ -448,4 +448,24 @@ public class ParserTests {
 		
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void primitiveNodeAndExpression() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("<primitive: 60> ^2");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof CompositeExpressionNode);
+		
+		CompositeExpressionNode cenode = (CompositeExpressionNode)node;
+		
+		assertNotNull(cenode.getExpressions());
+		assertEquals(2, cenode.getExpressions().length);
+		assertTrue(cenode.getExpressions()[0] instanceof PrimitiveNode);
+		
+		assertEquals(60, ((PrimitiveNode)cenode.getExpressions()[0]).getValue());
+		
+		assertNull(parser.parseExpressionNode());
+	}
 }

@@ -70,18 +70,35 @@ public class Parser {
 		Node node = this.parseKeywordExpression();
 		List<Node> list = null;
 		
-		for (token = this.nextToken(); token != null && token.getType() == TokenType.SEPARATOR && token.getValue().equals("."); token = this.nextToken()) {
+		while (node != null && node instanceof PrimitiveNode) {
 			if (list == null) {
 				list = new ArrayList<Node>();
 				list.add(node);
 			}
 			
 			node = this.parseKeywordExpression();
-			
-			if (node == null)
-				break;
-			
+		}
+		
+		if (node == null && list.size() == 1)
+			return list.get(0);
+		
+		if (list != null && node != null)
 			list.add(node);
+		
+		if (node != null) {
+			for (token = this.nextToken(); token != null && token.getType() == TokenType.SEPARATOR && token.getValue().equals("."); token = this.nextToken()) {
+				if (list == null) {
+					list = new ArrayList<Node>();
+					list.add(node);
+				}
+				
+				node = this.parseKeywordExpression();
+				
+				if (node == null)
+					break;
+				
+				list.add(node);
+			}
 		}
 		
 		this.pushToken(token);

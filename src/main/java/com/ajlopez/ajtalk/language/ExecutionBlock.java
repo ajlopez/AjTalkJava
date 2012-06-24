@@ -1,5 +1,7 @@
 package com.ajlopez.ajtalk.language;
 
+import com.ajlopez.ajtalk.Machine;
+
 public class ExecutionBlock {
 	private Block block;
 	private Object[] locals;
@@ -11,7 +13,7 @@ public class ExecutionBlock {
 			this.locals = new Object[block.nlocals];
 	}
 	
-	public Object execute(Object self, Object[] arguments) {
+	public Object execute(Object self, Object[] arguments, Machine machine) {
 		Object[] stack = new Object[5];
 		int position = 0;
 		int ip = 0;

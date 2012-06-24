@@ -1,5 +1,7 @@
 package com.ajlopez.ajtalk.language;
 
+import com.ajlopez.ajtalk.Machine;
+
 public class Block implements IBlock {
 	int arity;
 	int nlocals;
@@ -34,8 +36,8 @@ public class Block implements IBlock {
 	}
 
 	@Override
-	public Object execute(Object[] arguments) {
+	public Object execute(Object[] arguments, Machine machine) {
 		ExecutionBlock exeblock = new ExecutionBlock(this);
-		return exeblock.execute(null, arguments);
+		return exeblock.execute(null, arguments, machine);
 	}		
 }

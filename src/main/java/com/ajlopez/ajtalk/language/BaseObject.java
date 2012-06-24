@@ -1,5 +1,7 @@
 package com.ajlopez.ajtalk.language;
 
+import com.ajlopez.ajtalk.Machine;
+
 public class BaseObject implements IObject {
 	private IBehavior behavior;
 	private Object[] values;
@@ -21,9 +23,9 @@ public class BaseObject implements IObject {
 	}
 
 	@Override
-	public Object send(String selector, Object[] arguments) {
+	public Object send(String selector, Object[] arguments, Machine machine) {
 		IMethod method = this.behavior.getMethod(selector);
-		return method.execute(this, arguments);
+		return method.execute(this, arguments, machine);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ public class Bytecodes {
 	public static final int GETGLOBAL = 6;
 	
 	public static final int SETVARIABLE = 10;
+	public static final int SETGLOBAL = 11;
 	
 	public static final int ADD = 20;
 	

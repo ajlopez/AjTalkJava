@@ -70,13 +70,22 @@ public class ExecutionBlockTests {
 
 	@Test
 	public void executeGetGlobalVariable() throws ExecutionException {
-		BaseClass behavior = new BaseClass(null, new String[] { "x", "y"} );
-		BaseObject object = new BaseObject(behavior);
 		Machine machine = new Machine();
 		machine.setValue("one", 1);
 		
 		byte[] bytecodes = new byte[] { Bytecodes.GETGLOBAL, 0, Bytecodes.RETURN };
-		Method method = new Method(1, 1, bytecodes, new Object[] { "one" } );
-		assertEquals(1, method.execute(object, null, machine));
+		Block block = new Block(0, 0, bytecodes, new Object[] { "one" } );
+		assertEquals(1, block.execute(null, machine));
+	}
+
+	@Test
+	public void executeSetGlobalVariable() throws ExecutionException {
+		Machine machine = new Machine();
+		
+		byte[] bytecodes = new byte[] { Bytecodes.GETVALUE, 0, Bytecodes.SETGLOBAL, 1 };
+		Block block = new Block(0, 0, bytecodes, new Object[] { 1,  "one" } );
+		block.execute(null, machine);
+		
+		assertEquals(1, machine.getValue("one"));
 	}
 }

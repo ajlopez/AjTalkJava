@@ -46,7 +46,7 @@ public class ExecutionBlockTests {
 
 	@Test
 	public void executeSetVariable() throws ExecutionException {
-		BaseClass behavior = new BaseClass(null, new String[] { "x", "y"} );
+		BaseClass behavior = new BaseClass(null, null, new String[] { "x", "y"} );
 		BaseObject object = new BaseObject(behavior);
 		
 		byte[] bytecodes = new byte[] { Bytecodes.GETARGUMENT, 0, Bytecodes.SETVARIABLE, 0 };
@@ -58,7 +58,7 @@ public class ExecutionBlockTests {
 
 	@Test
 	public void executeSetVariables() throws ExecutionException {
-		BaseClass behavior = new BaseClass(null, new String[] { "x", "y"} );
+		BaseClass behavior = new BaseClass(null, null, new String[] { "x", "y"} );
 		BaseObject object = new BaseObject(behavior);
 		
 		byte[] bytecodes = new byte[] { Bytecodes.GETARGUMENT, 0, Bytecodes.SETVARIABLE, 0, Bytecodes.GETARGUMENT, 1, Bytecodes.SETVARIABLE, 1 };

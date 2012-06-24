@@ -8,14 +8,14 @@ public class BaseObjectTests {
 
 	@Test
 	public void hasBehavior() {
-		BaseClass behavior = new BaseClass(null);
+		BaseClass behavior = new BaseClass(null, null);
 		BaseObject object = new BaseObject(behavior);
 		assertEquals(behavior, object.getBehavior());
 	}
 
 	@Test
 	public void getSetVariable() {
-		BaseClass behavior = new BaseClass(null, new String[] { "x", "y"} );
+		BaseClass behavior = new BaseClass(null, null, new String[] { "x", "y"} );
 		BaseObject object = new BaseObject(behavior);
 		
 		assertNull(object.getVariable(0));

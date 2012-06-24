@@ -11,14 +11,14 @@ public class BaseClassTests {
 
 	@Test
 	public void createClass() {
-		BaseClass klass = new BaseClass(null);
+		BaseClass klass = new BaseClass(null, null);
 		assertEquals(0, klass.getObjectSize());
 		assertEquals(-1, klass.getVariableOffset("a"));
 	}
 
 	@Test
 	public void createClassWithInstanceVariables() {
-		BaseClass klass = new BaseClass(null, new String[] { "x", "y" });
+		BaseClass klass = new BaseClass(null, null, new String[] { "x", "y" });
 		assertEquals(2, klass.getObjectSize());
 		assertEquals(-1, klass.getVariableOffset("z"));
 		assertEquals(0, klass.getVariableOffset("x"));
@@ -27,8 +27,8 @@ public class BaseClassTests {
 
 	@Test
 	public void createSubclassWithInstanceVariables() {
-		BaseClass superklass = new BaseClass(null, new String[] { "x", "y" });
-		BaseClass klass = new BaseClass(superklass, new String[] { "z" });
+		BaseClass superklass = new BaseClass(null, null, new String[] { "x", "y" });
+		BaseClass klass = new BaseClass(null, superklass, new String[] { "z" });
 		assertEquals(3, klass.getObjectSize());
 		assertEquals(0, klass.getVariableOffset("x"));
 		assertEquals(1, klass.getVariableOffset("y"));
@@ -37,7 +37,7 @@ public class BaseClassTests {
 
 	@Test
 	public void defineMethod() {
-		BaseClass klass = new BaseClass(null);
+		BaseClass klass = new BaseClass(null, null);
 		IMethod method = new MyMethod();
 		klass.defineMethod("mymethod", method);
 		assertEquals(method, klass.getMethod("mymethod"));
@@ -45,7 +45,7 @@ public class BaseClassTests {
 
 	@Test
 	public void createInstance() {
-		BaseClass klass = new BaseClass(null, new String[] { "x", "y" });
+		BaseClass klass = new BaseClass(null, null, new String[] { "x", "y" });
 		IObject object = klass.createInstance();
 		
 		assertNotNull(object);
@@ -56,7 +56,7 @@ public class BaseClassTests {
 
 	@Test
 	public void invokeInstanceMethod() throws ExecutionException {
-		BaseClass klass = new BaseClass(null, new String[] { "x", "y" });
+		BaseClass klass = new BaseClass(null, null, new String[] { "x", "y" });
 		IMethod method = new MyMethod();
 		klass.defineMethod("mymethod", method);
 		IObject object = klass.createInstance();

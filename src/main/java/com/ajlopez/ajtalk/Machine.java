@@ -9,9 +9,12 @@ public class Machine {
 	
 	public void initialize()
 	{
-		IClass classProtoObject = new BaseClass(null);
+		IClass metaclass = new BaseClass(null, null);
+		IClass classProtoObject = new BaseClass(metaclass, null);
 		this.setValue("ProtoObject", classProtoObject);
-		IClass classObject = new BaseClass(classProtoObject);
+		IMethod subclass = new ClassSubclassMethod();
+		metaclass.defineMethod("subclass:", subclass);
+		IClass classObject = new BaseClass(metaclass, classProtoObject);
 		this.setValue("Object", classObject);
 	}
 	
@@ -22,4 +25,16 @@ public class Machine {
 	public Object getValue(String name) {
 		return values.get(name);
 	}
+}
+
+class ClassSubclassMethod implements IMethod {
+
+	@Override
+	public Object execute(Object self, Object[] arguments, Machine machine) throws ExecutionException {
+		IBehavior behavior = (IBehavior) self;
+		// TODO Review metaclass
+		Object result = new BaseClass(((IObject)behavior).getBehavior(), behavior);
+		machine.setValue((String)arguments[0], result);
+		return result;
+	}	
 }

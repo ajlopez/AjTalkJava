@@ -8,14 +8,14 @@ public class BaseClass extends BaseObject implements IClass {
 	private IBehavior superclass;
 	private Map<String, IMethod> methods = new HashMap<String, IMethod>();
 	
-	public BaseClass(IBehavior superklass) {
-		this(superklass, null);
+	public BaseClass(IBehavior metaclass, IBehavior superclass) {
+		this(metaclass, superclass, null);
 	}
 	
-	public BaseClass(IBehavior superklass, String[] instanceVariableNames)
+	public BaseClass(IBehavior metaclass, IBehavior superclass, String[] instanceVariableNames)
 	{
-		super(null);
-		this.superclass = superklass;
+		super(metaclass);
+		this.superclass = superclass;
 		this.instanceVariableNames = instanceVariableNames;
 	}
 	

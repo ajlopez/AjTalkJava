@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.ajlopez.ajtalk.language.IBehavior;
+import com.ajlopez.ajtalk.language.IClass;
+import com.ajlopez.ajtalk.language.IObject;
 
 public class MachineTests {
 	@Test
@@ -40,5 +42,22 @@ public class MachineTests {
 		
 		IBehavior klass = (IBehavior)machine.getValue("Object");
 		assertEquals(machine.getValue("ProtoObject"), klass.getSuperBehavior());
+	}
+
+	@Test
+	public void initializeProtoObjectSubclass() throws ExecutionException {
+		Machine machine = new Machine();
+		machine.initialize();
+		
+		IObject protoObject = (IObject)machine.getValue("ProtoObject");
+		Object result = protoObject.send("subclass:", new Object[] { "Point" }, machine);
+		
+		assertNotNull(result);
+		assertTrue(result instanceof IClass);
+		assertEquals(machine.getValue("Point"), result);		
+		
+		IClass klass = (IClass)result;
+		
+		assertEquals(protoObject, klass.getSuperBehavior());
 	}
 }

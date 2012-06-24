@@ -3,7 +3,10 @@ package com.ajlopez.ajtalk;
 import java.io.IOException;
 import java.util.*;
 
+import com.ajlopez.ajtalk.compiler.Compiler;
 import com.ajlopez.ajtalk.compiler.ChunkReader;
+import com.ajlopez.ajtalk.compiler.Parser;
+import com.ajlopez.ajtalk.compiler.ast.MethodNode;
 import com.ajlopez.ajtalk.language.*;
 
 public class Machine {
@@ -22,6 +25,10 @@ public class Machine {
 		IMethod comment = new ClassCommentMethod();
 		metaclass.defineMethod("commentStamp:", comment);
 		metaclass.defineMethod("commentStamp:prior:", comment);
+		
+		IMethod methodsFor = new ClassMethodsForMethod();
+		metaclass.defineMethod("methodsFor:", methodsFor);
+		metaclass.defineMethod("methodsFor:stamp:", methodsFor);
 		
 		IClass classProtoObject = new BaseClass(metaclass, null);
 		this.setValue("ProtoObject", classProtoObject);
@@ -63,6 +70,13 @@ class ClassCommentMethod implements IMethod {
 	}	
 }
 
+class ClassMethodsForMethod implements IMethod {
+	@Override
+	public Object execute(Object self, Object[] arguments, Machine machine) throws ExecutionException {
+		return new MethodProcessor(null, (IBehavior)self);
+	}	
+}
+
 class CommentProcessor extends BaseObject {
 	public CommentProcessor(IBehavior behavior) {
 		super(behavior);
@@ -77,6 +91,36 @@ class CommentProcessor extends BaseObject {
 		try {
 			reader.readChunk();
 		} catch (IOException e) {
+			throw new ExecutionException(e);
+		}
+		return null;
+	}
+}
+
+class MethodProcessor extends BaseObject {
+	private IBehavior klass;
+	
+	public MethodProcessor(IBehavior behavior, IBehavior klass) {
+		super(behavior);
+		this.klass = klass;
+	}	
+	
+	@Override
+	public Object send(String selector, Object[]arguments, Machine machine) throws ExecutionException {
+		if (!selector.equals("process:"))
+			throw new ExecutionException("Invalid Method");
+		
+		ChunkReader reader = (ChunkReader)arguments[0];
+		try {
+			for (String chunk = reader.readChunk(); chunk != null && !chunk.equals(" "); chunk = reader.readChunk()) {
+				Parser parser = new Parser(chunk);
+				MethodNode node; 
+				node = parser.parseMethodNode();
+				Compiler compiler = new Compiler(node);
+				IMethod method = compiler.compileMethod();
+				this.klass.defineMethod(node.getSelector(), method);
+			}
+		} catch (Exception e) {
 			throw new ExecutionException(e);
 		}
 		return null;

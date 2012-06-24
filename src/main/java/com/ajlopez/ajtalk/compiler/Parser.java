@@ -18,7 +18,7 @@ public class Parser {
 		this.lexer = lexer;
 	}
 	
-	public Node parseMethodNode()  throws ParserException, IOException, LexerException {
+	public MethodNode parseMethodNode()  throws ParserException, IOException, LexerException {
 		Token token = this.nextToken();
 		
 		if (token == null)

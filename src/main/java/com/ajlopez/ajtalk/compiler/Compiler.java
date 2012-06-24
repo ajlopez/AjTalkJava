@@ -6,9 +6,14 @@ import java.util.List;
 import com.ajlopez.ajtalk.compiler.ast.*;
 import com.ajlopez.ajtalk.language.Block;
 import com.ajlopez.ajtalk.language.Bytecodes;
+import com.ajlopez.ajtalk.language.IBlock;
+import com.ajlopez.ajtalk.language.IMethod;
+import com.ajlopez.ajtalk.language.Method;
 
 public class Compiler {
 	private Node node;
+	private List<String> argnames = new ArrayList<String>();
+	private List<String> localnames = new ArrayList<String>();
 	private List<Byte> codes = new ArrayList<Byte>();
 	private List<Object> values = new ArrayList<Object>();
 	
@@ -16,7 +21,12 @@ public class Compiler {
 		this.node = node;
 	}
 	
-	public Block compileBlock() throws CompilerException {
+	public IMethod compileMethod() throws CompilerException {
+		this.compileNode(this.node);
+		return makeMethod();
+	}
+	
+	public IBlock compileBlock() throws CompilerException {
 		this.compileNode(this.node);
 		return makeBlock();
 	}
@@ -151,7 +161,7 @@ public class Compiler {
 		return;
 	}
 	
-	private Block makeBlock()
+	private IBlock makeBlock()
 	{
 		byte[] bytecodes = new byte[this.codes.size()];
 		Object[] objects = new Object[this.values.size()];
@@ -161,6 +171,18 @@ public class Compiler {
 			bytecodes[position++] = bt.byteValue();
 				
 		return new Block(0, 0, bytecodes, this.values.toArray(objects));
+	}
+	
+	private IMethod makeMethod()
+	{
+		byte[] bytecodes = new byte[this.codes.size()];
+		Object[] objects = new Object[this.values.size()];
+		int position = 0;
+		
+		for (Byte bt : this.codes)
+			bytecodes[position++] = bt.byteValue();
+				
+		return new Method(this.argnames.size(), this.localnames.size(), bytecodes, this.values.toArray(objects));
 	}
 	
 	private void compileBytecode(byte code) {

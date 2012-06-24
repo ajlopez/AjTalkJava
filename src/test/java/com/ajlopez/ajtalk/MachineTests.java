@@ -91,6 +91,7 @@ public class MachineTests {
 		
 		assertNotNull(result);
 		assertTrue(result instanceof IObject);
+		assertTrue(result instanceof CommentProcessor);
 	}
 
 	@Test
@@ -103,5 +104,32 @@ public class MachineTests {
 		
 		assertNotNull(result);
 		assertTrue(result instanceof IObject);
+		assertTrue(result instanceof CommentProcessor);
+	}
+
+	@Test
+	public void initializeProtoObjectMethodsFor() throws ExecutionException {
+		Machine machine = new Machine();
+		machine.initialize();
+		
+		IObject protoObject = (IObject)machine.getValue("ProtoObject");
+		Object result = protoObject.send("methodsFor:", new Object[] { "category" }, machine);
+		
+		assertNotNull(result);
+		assertTrue(result instanceof IObject);
+		assertTrue(result instanceof MethodProcessor);
+	}
+
+	@Test
+	public void initializeProtoObjectMethodsForStamp() throws ExecutionException {
+		Machine machine = new Machine();
+		machine.initialize();
+		
+		IObject protoObject = (IObject)machine.getValue("ProtoObject");
+		Object result = protoObject.send("methodsFor:stamp:", new Object[] { "category" }, machine);
+		
+		assertNotNull(result);
+		assertTrue(result instanceof IObject);
+		assertTrue(result instanceof MethodProcessor);
 	}
 }

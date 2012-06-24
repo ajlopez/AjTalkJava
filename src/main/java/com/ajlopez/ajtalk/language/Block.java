@@ -1,5 +1,6 @@
 package com.ajlopez.ajtalk.language;
 
+import com.ajlopez.ajtalk.ExecutionException;
 import com.ajlopez.ajtalk.Machine;
 
 public class Block implements IBlock {
@@ -36,7 +37,7 @@ public class Block implements IBlock {
 	}
 
 	@Override
-	public Object execute(Object[] arguments, Machine machine) {
+	public Object execute(Object[] arguments, Machine machine) throws ExecutionException {
 		ExecutionBlock exeblock = new ExecutionBlock(this);
 		return exeblock.execute(null, arguments, machine);
 	}		

@@ -1,5 +1,6 @@
 package com.ajlopez.ajtalk.language;
 
+import com.ajlopez.ajtalk.ExecutionException;
 import com.ajlopez.ajtalk.Machine;
 
 public class BaseObject implements IObject {
@@ -23,7 +24,7 @@ public class BaseObject implements IObject {
 	}
 
 	@Override
-	public Object send(String selector, Object[] arguments, Machine machine) {
+	public Object send(String selector, Object[] arguments, Machine machine) throws ExecutionException {
 		IMethod method = this.behavior.getMethod(selector);
 		return method.execute(this, arguments, machine);
 	}

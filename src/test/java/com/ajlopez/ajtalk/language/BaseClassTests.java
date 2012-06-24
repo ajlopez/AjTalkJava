@@ -43,12 +43,10 @@ public class BaseClassTests {
 	}
 
 	private class MyMethod implements IMethod {
-
 		@Override
 		public Object execute(Object self, Object[] arguments, Machine machine) {
 			// TODO Auto-generated method stub
 			return null;
-		}
-	
+		}	
 	}
 }

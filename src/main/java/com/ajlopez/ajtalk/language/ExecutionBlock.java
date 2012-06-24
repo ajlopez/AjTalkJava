@@ -1,5 +1,6 @@
 package com.ajlopez.ajtalk.language;
 
+import com.ajlopez.ajtalk.ExecutionException;
 import com.ajlopez.ajtalk.Machine;
 
 public class ExecutionBlock {
@@ -13,14 +14,15 @@ public class ExecutionBlock {
 			this.locals = new Object[block.nlocals];
 	}
 	
-	public Object execute(Object self, Object[] arguments, Machine machine) {
+	public Object execute(Object self, Object[] arguments, Machine machine) throws ExecutionException {
 		Object[] stack = new Object[5];
 		int position = 0;
 		int ip = 0;
 		int bclength = this.block.bytecodes.length;
 		
 		while (ip < bclength) {
-			switch (this.block.bytecodes[ip]) {
+			byte bc = this.block.bytecodes[ip];
+			switch (bc) {
 			case Bytecodes.RETURN:
 				return stack[position-1];
 			case Bytecodes.GETARGUMENT:
@@ -34,6 +36,10 @@ public class ExecutionBlock {
 			case Bytecodes.GETVALUE:
 				ip++;
 				stack[position++] = this.block.values[this.block.bytecodes[ip]];
+				break;
+			case Bytecodes.GETGLOBAL:
+				ip++;
+				stack[position++] = machine.getValue((String) this.block.values[this.block.bytecodes[ip]]);
 				break;
 			case Bytecodes.SETLOCAL:
 				ip++;
@@ -55,6 +61,8 @@ public class ExecutionBlock {
 					result = ((Integer) op1).intValue() + ((Integer) op2).intValue();
 				stack[position++] = result;
 				break;
+			default:
+				throw new ExecutionException("Invalid Bytecode " + bc);
 			}
 			
 			ip++;

@@ -4,37 +4,40 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.ajlopez.ajtalk.ExecutionException;
+import com.ajlopez.ajtalk.Machine;
+
 public class ExecutionBlockTests {
 	@Test
-	public void executeMethodWithSimpleReturn() {
+	public void executeMethodWithSimpleReturn() throws ExecutionException {
 		byte[] bytecodes = new byte[] { Bytecodes.GETARGUMENT, 0, Bytecodes.RETURN };
 		Method method = new Method(1, 0, bytecodes );
 		assertEquals(1, method.execute(null, new Object[] { 1 }, null));
 	}
 
 	@Test
-	public void executeBlockWithSimpleReturn() {
+	public void executeBlockWithSimpleReturn() throws ExecutionException {
 		byte[] bytecodes = new byte[] { Bytecodes.GETARGUMENT, 0, Bytecodes.RETURN };
 		Block block = new Block(1, 0, bytecodes );
 		assertEquals(1, block.execute(new Object[] { 1 }, null));
 	}
 
 	@Test
-	public void executeSetAndGetLocalWithSimpleReturn() {
+	public void executeSetAndGetLocalWithSimpleReturn() throws ExecutionException {
 		byte[] bytecodes = new byte[] { Bytecodes.GETARGUMENT, 0, Bytecodes.SETLOCAL, 0, Bytecodes.GETLOCAL, 0, Bytecodes.RETURN };
 		Block block = new Block(1, 1, bytecodes );
 		assertEquals(1, block.execute(new Object[] { 1 }, null));
 	}
 
 	@Test
-	public void executeAddIntegers() {
+	public void executeAddIntegers() throws ExecutionException {
 		byte[] bytecodes = new byte[] { Bytecodes.GETARGUMENT, 0, Bytecodes.GETARGUMENT, 1, Bytecodes.ADD, Bytecodes.RETURN };
 		Block block = new Block(1, 1, bytecodes );
 		assertEquals(3, block.execute(new Object[] { 1, 2 }, null));
 	}
 
 	@Test
-	public void executeGetValue() {
+	public void executeGetValue() throws ExecutionException {
 		byte[] bytecodes = new byte[] { Bytecodes.GETVALUE, 0, Bytecodes.RETURN };
 		Object[] values = new Object[] { 1 };
 		Block block = new Block(1, 1, bytecodes, values );
@@ -42,7 +45,7 @@ public class ExecutionBlockTests {
 	}
 
 	@Test
-	public void executeSetVariable() {
+	public void executeSetVariable() throws ExecutionException {
 		BaseClass behavior = new BaseClass(null, new String[] { "x", "y"} );
 		BaseObject object = new BaseObject(behavior);
 		
@@ -54,7 +57,7 @@ public class ExecutionBlockTests {
 	}
 
 	@Test
-	public void executeSetVariables() {
+	public void executeSetVariables() throws ExecutionException {
 		BaseClass behavior = new BaseClass(null, new String[] { "x", "y"} );
 		BaseObject object = new BaseObject(behavior);
 		
@@ -63,5 +66,17 @@ public class ExecutionBlockTests {
 		assertEquals(object, method.execute(object, new Object[] { 10, 20 }, null));
 		assertEquals(10, object.getVariable(0));
 		assertEquals(20, object.getVariable(1));
+	}
+
+	@Test
+	public void executeGetGlobalVariable() throws ExecutionException {
+		BaseClass behavior = new BaseClass(null, new String[] { "x", "y"} );
+		BaseObject object = new BaseObject(behavior);
+		Machine machine = new Machine();
+		machine.setValue("one", 1);
+		
+		byte[] bytecodes = new byte[] { Bytecodes.GETGLOBAL, 0, Bytecodes.RETURN };
+		Method method = new Method(1, 1, bytecodes, new Object[] { "one" } );
+		assertEquals(1, method.execute(object, null, machine));
 	}
 }

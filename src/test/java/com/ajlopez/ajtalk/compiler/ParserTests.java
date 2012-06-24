@@ -435,4 +435,17 @@ public class ParserTests {
 		
 		assertNull(parser.parseExpressionNode());
 	}
+
+	@Test
+	public void primitiveNode() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("<primitive: 60>");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof PrimitiveNode);
+		assertEquals(60, ((PrimitiveNode)node).getValue());
+		
+		assertNull(parser.parseExpressionNode());
+	}
 }

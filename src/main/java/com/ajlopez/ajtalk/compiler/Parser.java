@@ -76,7 +76,12 @@ public class Parser {
 				list.add(node);
 			}
 			
-			list.add(this.parseKeywordExpression());
+			node = this.parseKeywordExpression();
+			
+			if (node == null)
+				break;
+			
+			list.add(node);
 		}
 		
 		this.pushToken(token);
@@ -195,6 +200,13 @@ public class Parser {
 			return new ExpressionArrayNode(expressions);
 		}
 		
+		if (token.getType() == TokenType.BINSELECTOR && token.getValue().equals("<")) {
+			this.parseToken("primitive:", TokenType.KEYSELECTOR);
+			int value = this.parseInteger();
+			this.parseToken(">", TokenType.BINSELECTOR);
+			return new PrimitiveNode(value);
+		}
+		
 		throw new ParserException("Unexpected '" + token.getValue() + "'");
 	}
 	
@@ -288,6 +300,15 @@ public class Parser {
 			throw new ParserException("Expected name");
 		
 		return token.getValue();
+	}
+	
+	private int parseInteger() throws IOException, LexerException, ParserException {
+		Token token = this.nextToken();
+		
+		if (token == null || token.getType() != TokenType.INTEGER)
+			throw new ParserException("Expected integer");
+		
+		return Integer.parseInt(token.getValue());
 	}
 	
 	private void parseToken(String value, TokenType type) throws IOException, LexerException, ParserException {

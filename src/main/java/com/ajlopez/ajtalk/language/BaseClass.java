@@ -51,6 +51,11 @@ public class BaseClass extends BaseObject implements IClass {
 		return -1;
 	}
 	
+	@Override
+	public IObject createInstance() {
+		return new BaseObject(this);
+	}
+	
 	private int getBaseObjectSize() {
 		IBehavior behavior = this.getBehavior();
 		

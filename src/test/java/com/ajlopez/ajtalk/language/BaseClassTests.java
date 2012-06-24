@@ -42,6 +42,17 @@ public class BaseClassTests {
 		assertEquals(method, klass.getMethod("mymethod"));
 	}
 
+	@Test
+	public void createInstance() {
+		BaseClass klass = new BaseClass(null, new String[] { "x", "y" });
+		IObject object = klass.createInstance();
+		
+		assertNotNull(object);
+		assertNull(object.getVariable(0));
+		assertNull(object.getVariable(1));
+		assertEquals(klass, object.getBehavior());
+	}
+
 	private class MyMethod implements IMethod {
 		@Override
 		public Object execute(Object self, Object[] arguments, Machine machine) {

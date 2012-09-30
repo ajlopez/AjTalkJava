@@ -4,28 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ajlopez.ajtalk.compiler.ast.*;
-import com.ajlopez.ajtalk.language.Block;
-import com.ajlopez.ajtalk.language.Bytecodes;
-import com.ajlopez.ajtalk.language.IBlock;
-import com.ajlopez.ajtalk.language.IClass;
-import com.ajlopez.ajtalk.language.IMethod;
-import com.ajlopez.ajtalk.language.Method;
+import com.ajlopez.ajtalk.language.*;
 
 public class Compiler {
 	private Node node;
-	private IClass klass;
 	private List<String> argnames = new ArrayList<String>();
 	private List<String> localnames = new ArrayList<String>();
 	private List<Byte> codes = new ArrayList<Byte>();
 	private List<Object> values = new ArrayList<Object>();
 	
 	public Compiler(Node node) {
-		this(node, null);
-	}
-	
-	public Compiler(Node node, IClass klass) {
 		this.node = node;
-		this.klass = klass;
 	}
 	
 	public IMethod compileMethod() throws CompilerException {

@@ -49,6 +49,8 @@ public class Parser {
 				ids.add(this.parseId());
 			}
 			
+			this.pushToken(token);
+			
 			String[] arguments = new String[ids.size()];
 			arguments = ids.toArray(arguments);
 			String[] locals = this.parseLocalNames();

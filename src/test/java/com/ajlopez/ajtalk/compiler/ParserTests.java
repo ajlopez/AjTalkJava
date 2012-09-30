@@ -398,6 +398,24 @@ public class ParserTests {
 	}
 
 	@Test
+	public void unaryMethodWithLocals() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("x |y| y := x. ^y");
+		
+		Node node = parser.parseMethodNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof MethodNode);
+		
+		MethodNode mnode = (MethodNode)node;
+		assertEquals("x", mnode.getSelector());
+		assertNull(mnode.getArguments());
+		assertEquals(1, mnode.getLocals().length);
+		assertEquals("y", mnode.getLocals()[0]);
+		
+		assertNull(parser.parseExpressionNode());
+	}
+
+	@Test
 	public void binaryMethod() throws ParserException, IOException, LexerException {
 		Parser parser = new Parser("+ y ^x+y");
 		
@@ -412,6 +430,26 @@ public class ParserTests {
 		assertEquals(1, mnode.getArguments().length);
 		assertEquals("y", mnode.getArguments()[0]);
 		assertNull(mnode.getLocals());
+		
+		assertNull(parser.parseExpressionNode());
+	}
+
+	@Test
+	public void binaryMethodWithLocals() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("+ y |z| z := y. ^x+z");
+		
+		Node node = parser.parseMethodNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof MethodNode);
+		
+		MethodNode mnode = (MethodNode)node;
+		assertEquals("+", mnode.getSelector());
+		assertNotNull(mnode.getArguments());
+		assertEquals(1, mnode.getArguments().length);
+		assertEquals("y", mnode.getArguments()[0]);
+		assertEquals(1, mnode.getLocals().length);
+		assertEquals("z", mnode.getLocals()[0]);
 		
 		assertNull(parser.parseExpressionNode());
 	}
@@ -432,6 +470,28 @@ public class ParserTests {
 		assertEquals("a", mnode.getArguments()[0]);
 		assertEquals("b", mnode.getArguments()[1]);
 		assertNull(mnode.getLocals());
+		
+		assertNull(parser.parseExpressionNode());
+	}
+
+	@Test
+	public void keywordMethodWithLocals() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("with: a with:b |c d| c := a. d := b. ^c+d");
+		
+		Node node = parser.parseMethodNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof MethodNode);
+		
+		MethodNode mnode = (MethodNode)node;
+		assertEquals("with:with:", mnode.getSelector());
+		assertNotNull(mnode.getArguments());
+		assertEquals(2, mnode.getArguments().length);
+		assertEquals("a", mnode.getArguments()[0]);
+		assertEquals("b", mnode.getArguments()[1]);
+		assertEquals(2, mnode.getLocals().length);
+		assertEquals("c", mnode.getLocals()[0]);
+		assertEquals("d", mnode.getLocals()[1]);
 		
 		assertNull(parser.parseExpressionNode());
 	}

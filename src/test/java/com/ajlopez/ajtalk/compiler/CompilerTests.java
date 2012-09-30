@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.ajlopez.ajtalk.language.Block;
 import com.ajlopez.ajtalk.language.Bytecodes;
 import com.ajlopez.ajtalk.language.IBlock;
+import com.ajlopez.ajtalk.language.IMethod;
 
 public class CompilerTests {
 	@Test
@@ -99,6 +100,15 @@ public class CompilerTests {
 		
 		IBlock block = compiler.compileBlock();
 		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0, Bytecodes.CLEAR, Bytecodes.GETVALUE, 1, Bytecodes.CLEAR, Bytecodes.GETVALUE, 2, Bytecodes.RETURN}, new Object[] { 1, 2, 3 });
+	}
+	
+	@Test
+	public void compileSimpleMethod() throws ParserException, IOException, LexerException, CompilerException {
+		Parser parser = new Parser("zero ^0");
+		Compiler compiler = new Compiler(parser.parseMethodNode());
+		
+		IMethod method = compiler.compileMethod();
+		this.testBlock((IBlock) method, 0, 0, new byte[] {Bytecodes.GETVALUE, 0, Bytecodes.RETURN}, new Object[] { 0 });
 	}
 	
 	private void testBlock(IBlock blk, int arity, int nlocals, byte[] bytecodes, Object[] values) {

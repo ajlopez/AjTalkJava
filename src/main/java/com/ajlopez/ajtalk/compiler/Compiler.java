@@ -109,10 +109,20 @@ public class Compiler {
 	}
 	
 	private void compileNode(IdNode node) {
+		int position;
+		
 		if (this.localnames != null) {
-			int position = this.localnames.indexOf(node.getName());
+			position = this.localnames.indexOf(node.getName());
 			if (position >= 0) {
 				this.compileBytecode((byte)Bytecodes.GETLOCAL);
+				this.compileBytecode((byte)position);
+				return;
+			}
+		}
+		if (this.argnames != null) {
+			position = this.argnames.indexOf(node.getName());
+			if (position >= 0) {
+				this.compileBytecode((byte)Bytecodes.GETARGUMENT);
 				this.compileBytecode((byte)position);
 				return;
 			}

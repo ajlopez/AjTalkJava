@@ -109,7 +109,8 @@ public class MachineTests {
 	public void methodProcessorProcessMethods() throws ExecutionException, IOException {
 		ChunkReader reader = new ChunkReader("one ^1! zero ^0! !");
 		Machine machine = new Machine();
-		IClass klass = (IClass)machine.getValue("Object");
+		machine.initialize();
+		IClass klass = (IClass)machine.getValue("ProtoObject");
 		MethodProcessor processor = new MethodProcessor(null, klass);
 		processor.send("process:", new Object[] { reader }, null);
 		assertNotNull(klass.getMethod("one"));

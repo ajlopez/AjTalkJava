@@ -2,6 +2,12 @@ package com.ajlopez.ajtalk.compiler;
 
 import java.io.*;
 
+import com.ajlopez.ajtalk.ExecutionException;
+import com.ajlopez.ajtalk.Machine;
+import com.ajlopez.ajtalk.compiler.ast.Node;
+import com.ajlopez.ajtalk.language.IBlock;
+import com.ajlopez.ajtalk.language.IObject;
+
 public class ChunkReader {
 	private static final char ChunkDelimeter = '!';
 	private Reader reader;
@@ -14,6 +20,29 @@ public class ChunkReader {
 	public ChunkReader(Reader reader) {
 		this.reader = reader;
 	}
+
+	public void processChunks(Machine machine) throws ExecutionException, ParserException, IOException, LexerException, CompilerException {
+		for (String chunk = this.readChunk(); chunk != null; chunk = this.readChunk()) {
+			boolean toprocess = false;
+			
+			if (chunk.length() > 0 && chunk.charAt(0) == '!') {
+				toprocess = true;
+				chunk = "^" + chunk.substring(1);
+			}
+			
+			Parser parser = new Parser(chunk);
+			Node node = parser.parseExpressionNode();
+			Compiler compiler = new Compiler(node);
+			IBlock block = compiler.compileBlock();
+			
+			Object result = block.execute(null, machine);
+			
+			if (toprocess) {
+				IObject obj = (IObject)result;
+				obj.send("process:", new Object[] { this }, machine);
+			}
+		}
+	}	
 	
 	public String readChunk() throws IOException {
 		StringWriter writer = new StringWriter();
@@ -61,5 +90,5 @@ public class ChunkReader {
 	
 	private void pushChar(int ich) {
 		this.lastchar = ich;
-	}	
+	}
 }

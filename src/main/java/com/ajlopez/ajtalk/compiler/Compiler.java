@@ -85,6 +85,11 @@ public class Compiler {
 			this.compileNode((CompositeExpressionNode)node);
 			return;
 		}
+
+		if (node instanceof AssignmentNode) {
+			this.compileNode((AssignmentNode)node);
+			return;
+		}
 		
 		throw new CompilerException("Unexpected Node");
 	}
@@ -106,6 +111,13 @@ public class Compiler {
 	private void compileNode(ReturnNode node) throws CompilerException {
 		this.compileNode(node.getExpression());
 		this.compileBytecode((byte)Bytecodes.RETURN);
+	}
+	
+	private void compileNode(AssignmentNode node) throws CompilerException {
+		String name = node.getTarget();
+		this.compileNode(node.getExpression());
+		this.compileBytecode((byte)Bytecodes.SETGLOBAL);
+		this.compileValue(name);
 	}
 	
 	private void compileNode(IdNode node) {

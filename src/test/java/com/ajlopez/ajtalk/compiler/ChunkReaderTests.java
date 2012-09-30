@@ -159,6 +159,25 @@ public class ChunkReaderTests {
 	}
 
 	@Test
+	public void processChunks() throws IOException, ParserException, LexerException, ExecutionException, CompilerException {
+		ChunkReader reader = new ChunkReader(this.resourceAsReader("Point.st"));
+		
+		Machine machine = new Machine();
+		machine.initialize();
+		
+		reader.processChunks(machine);
+		
+		assertNotNull(machine.getValue("Point"));
+		assertTrue(machine.getValue("Point") instanceof IClass);
+		
+		IClass klass = (IClass)machine.getValue("Point");
+		assertEquals(machine.getValue("Object"), klass.getSuperBehavior());
+		assertEquals(2, klass.getObjectSize());
+		assertEquals(0, klass.getVariableOffset("x"));
+		assertEquals(1, klass.getVariableOffset("y"));
+	}
+
+	@Test
 	public void executeFirstAndSecondChunkRectangle() throws IOException, ParserException, LexerException, ExecutionException, CompilerException {
 		ChunkReader reader = new ChunkReader(this.resourceAsReader("Rectangle.st"));
 		

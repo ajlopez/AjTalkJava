@@ -85,6 +85,15 @@ public class CompilerTests {
 	}
 	
 	@Test
+	public void compileAssignemnt() throws ParserException, IOException, LexerException, CompilerException {
+		Parser parser = new Parser("a := 1");
+		Compiler compiler = new Compiler(parser.parseExpressionNode());
+		
+		IBlock block = compiler.compileBlock();
+		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETVALUE, 0, Bytecodes.SETGLOBAL, 1}, new Object[] { 1, "a" });
+	}
+	
+	@Test
 	public void compileUnaryMessage() throws ParserException, IOException, LexerException, CompilerException {
 		Parser parser = new Parser("1 inc");
 		Compiler compiler = new Compiler(parser.parseExpressionNode());

@@ -381,6 +381,18 @@ public class ParserTests {
 	}
 
 	@Test
+	public void returnWithExpression() throws ParserException, IOException, LexerException {
+		Parser parser = new Parser("^ap >= ar ifTrue: [ap - ar] ifFalse: [Float pi * 2 - ar + ap]");
+		
+		Node node = parser.parseExpressionNode();
+		
+		assertNotNull(node);
+		assertTrue(node instanceof ReturnNode);
+
+		assertNull(parser.parseExpressionNode());
+	}
+	
+	@Test
 	public void unaryMethod() throws ParserException, IOException, LexerException {
 		Parser parser = new Parser("x ^x");
 		

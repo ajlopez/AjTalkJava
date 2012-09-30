@@ -121,6 +121,39 @@ public class ChunkReaderTests {
 		assertEquals(0, klass.getVariableOffset("x"));
 		assertEquals(1, klass.getVariableOffset("y"));
 	}
+
+	@Test
+	public void executeFirstAndSecondChunkRectangle() throws IOException, ParserException, LexerException, ExecutionException, CompilerException {
+		ChunkReader reader = new ChunkReader(this.resourceAsReader("Rectangle.st"));
+		
+		Machine machine = new Machine();
+		machine.initialize();
+		
+		String chunk = reader.readChunk();
+		Parser parser = new Parser(chunk);
+		Node node = parser.parseExpressionNode();
+		Compiler compiler = new Compiler(node);
+		IBlock block = compiler.compileBlock();
+		
+		block.execute(null, machine);
+
+		chunk = reader.readChunk();
+		parser = new Parser(chunk);
+		node = parser.parseExpressionNode();
+		compiler = new Compiler(node);
+		block = compiler.compileBlock();
+		
+		block.execute(null, machine);
+		
+		assertNotNull(machine.getValue("Rectangle"));
+		assertTrue(machine.getValue("Rectangle") instanceof IClass);
+		
+		IClass klass = (IClass)machine.getValue("Rectangle");
+		assertEquals(machine.getValue("Object"), klass.getSuperBehavior());
+		assertEquals(2, klass.getObjectSize());
+		assertEquals(0, klass.getVariableOffset("origin"));
+		assertEquals(1, klass.getVariableOffset("corner"));
+	}
 	
 	private Reader resourceAsReader(String name) throws IOException, ParserException, LexerException {
 		InputStream stream = this.getClass().getResourceAsStream(name);

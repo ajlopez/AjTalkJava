@@ -56,6 +56,15 @@ public class CompilerTests {
 		IBlock block = compiler.compileBlock();
 		this.testBlock(block, 0, 0, new byte[] {Bytecodes.GETGLOBAL, 0}, new Object[] { "Smalltalk" });
 	}
+
+	@Test
+	public void compileLocalId() throws ParserException, IOException, LexerException, CompilerException {
+		Parser parser = new Parser("mymethod |a| a");
+		Compiler compiler = new Compiler(parser.parseMethodNode());
+		
+		IMethod method = compiler.compileMethod();
+		this.testBlock((IBlock)method, 0, 1, new byte[] {Bytecodes.GETLOCAL, 0}, new Object[] { });
+	}
 	
 	@Test
 	public void compileReturnString() throws ParserException, IOException, LexerException, CompilerException {

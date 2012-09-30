@@ -1,6 +1,7 @@
 package com.ajlopez.ajtalk.compiler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.ajlopez.ajtalk.compiler.ast.*;
@@ -8,8 +9,8 @@ import com.ajlopez.ajtalk.language.*;
 
 public class Compiler {
 	private Node node;
-	private List<String> argnames = new ArrayList<String>();
-	private List<String> localnames = new ArrayList<String>();
+	private List<String> argnames;
+	private List<String> localnames;
 	private List<Byte> codes = new ArrayList<Byte>();
 	private List<Object> values = new ArrayList<Object>();
 	
@@ -18,7 +19,14 @@ public class Compiler {
 	}
 	
 	public IMethod compileMethod() throws CompilerException {
-		this.compileNode((MethodNode)this.node);
+		MethodNode node = (MethodNode)this.node;
+		String[] locals = node.getLocals();
+		if (locals != null)
+			this.localnames = Arrays.asList(node.getLocals());
+		String[] arguments = node.getArguments();
+		if (arguments != null)
+			this.argnames = Arrays.asList(node.getArguments());
+		this.compileNode(node);
 		return makeMethod();
 	}
 	
@@ -101,6 +109,14 @@ public class Compiler {
 	}
 	
 	private void compileNode(IdNode node) {
+		if (this.localnames != null) {
+			int position = this.localnames.indexOf(node.getName());
+			if (position >= 0) {
+				this.compileBytecode((byte)Bytecodes.GETLOCAL);
+				this.compileBytecode((byte)position);
+				return;
+			}
+		}
 		this.compileBytecode((byte)Bytecodes.GETGLOBAL);
 		this.compileValue(node.getName());
 		return;
@@ -181,8 +197,11 @@ public class Compiler {
 		
 		for (Byte bt : this.codes)
 			bytecodes[position++] = bt.byteValue();
+		
+		int argsize = this.argnames == null ? 0 : this.argnames.size();
+		int locsize = this.localnames == null ? 0 : this.localnames.size();
 				
-		return new Method(this.argnames.size(), this.localnames.size(), bytecodes, this.values.toArray(objects));
+		return new Method(argsize, locsize, bytecodes, this.values.toArray(objects));
 	}
 	
 	private void compileBytecode(byte code) {

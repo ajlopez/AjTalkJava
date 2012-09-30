@@ -76,6 +76,42 @@ public class ChunkReaderTests {
 	}
 
 	@Test
+	public void readAllChunksInPointSt() throws IOException, ParserException, LexerException {
+		ChunkReader reader = new ChunkReader(this.resourceAsReader("Point.st"));
+		
+		int nchuncks = 0;
+		
+		for (String chunk = reader.readChunk(); chunk != null; chunk = reader.readChunk())
+			nchuncks++;
+		
+		assertTrue(nchuncks>50);
+	}
+
+	@Test
+	public void readAllChunksInRectangleSt() throws IOException, ParserException, LexerException {
+		ChunkReader reader = new ChunkReader(this.resourceAsReader("Rectangle.st"));
+		
+		int nchuncks = 0;
+		
+		for (String chunk = reader.readChunk(); chunk != null; chunk = reader.readChunk())
+			nchuncks++;
+		
+		assertTrue(nchuncks>50);
+	}
+
+	@Test
+	public void readAllChunksInFileOut01() throws IOException, ParserException, LexerException {
+		ChunkReader reader = new ChunkReader(this.resourceAsReader("FileOut01.st"));
+		
+		int nchuncks = 0;
+		
+		for (String chunk = reader.readChunk(); chunk != null; chunk = reader.readChunk())
+			nchuncks++;
+		
+		assertTrue(nchuncks>=10);
+	}
+
+	@Test
 	public void executeFirstChunk() throws IOException, ParserException, LexerException, ExecutionException, CompilerException {
 		ChunkReader reader = new ChunkReader(this.resourceAsReader("Point.st"));
 		
